@@ -60,8 +60,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - board: heltec-v3
-          - board: heltec-wsl-v3
           - board: tbeam-s3-core
           - board: tlora-t3s3-v1
     uses: ./.github/workflows/build_esp32_s3.yml
