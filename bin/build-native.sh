@@ -12,11 +12,12 @@ rm -f $OUTDIR/firmware*
 mkdir -p $OUTDIR/
 rm -r $OUTDIR/* || true
 
-# Important to pull latest version of libs into all device flavors, otherwise some devices might be stale
-platformio pkg update 
+# CI uses build-native to promote update scripts. But we don't need to compile native with patched RadioLib (it fails)
+# # Important to pull latest version of libs into all device flavors, otherwise some devices might be stale
+# platformio pkg update 
 
-pio run --environment native
-cp .pio/build/native/program $OUTDIR/meshtasticd_linux_amd64
+# pio run --environment native
+# cp .pio/build/native/program $OUTDIR/meshtasticd_linux_amd64
 
 cp bin/device-install.* $OUTDIR
 cp bin/device-update.* $OUTDIR
