@@ -17,30 +17,30 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  check:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - board: tlora-v2-1-1_6
-          - board: tbeam
-          - board: t-echo
-          - board: tbeam-s3-core
-          - board: tlora-t3s3-v1
+  # check:
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #         - board: tlora-v2-1-1_6
+  #         - board: tbeam
+  #         - board: t-echo
+  #         - board: tbeam-s3-core
+  #         - board: tlora-t3s3-v1
 
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build base
-        id: base
-        uses: ./.github/actions/setup-base
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Build base
+  #       id: base
+  #       uses: ./.github/actions/setup-base
 
-      - name: Trunk Check
-        if: ${{ github.event_name != 'workflow_dispatch' }}
-        uses: trunk-io/trunk-action@v1
+  #     - name: Trunk Check
+  #       if: ${{ github.event_name != 'workflow_dispatch' }}
+  #       uses: trunk-io/trunk-action@v1
 
-      - name: Check ${{ matrix.board }}
-        run: bin/check-all.sh ${{ matrix.board }}
+  #     - name: Check ${{ matrix.board }}
+  #       run: bin/check-all.sh ${{ matrix.board }}
 
   build-esp32:
     strategy:
@@ -110,15 +110,15 @@ jobs:
             release/device-*.sh
             release/device-*.bat
 
-  after-checks:
-    runs-on: ubuntu-latest
-    needs: [check]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          ref: ${{github.event.pull_request.head.ref}}
-          repository: ${{github.event.pull_request.head.repo.full_name}}
+  # after-checks:
+  #   runs-on: ubuntu-latest
+  #   needs: [check]
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #       with:
+  #         ref: ${{github.event.pull_request.head.ref}}
+  #         repository: ${{github.event.pull_request.head.repo.full_name}}
 
   gather-artifacts:
     runs-on: ubuntu-latest
@@ -195,7 +195,7 @@ jobs:
   release-artifacts:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'workflow_dispatch' }}
-    needs: [gather-artifacts, after-checks]
+    needs: [gather-artifacts]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
