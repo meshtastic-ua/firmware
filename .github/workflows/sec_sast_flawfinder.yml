@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Flawfinder
 
+    permissions:
+      # required for all workflows
+      security-events: write
+
     steps:
       # step 1
       - name: clone application source code
