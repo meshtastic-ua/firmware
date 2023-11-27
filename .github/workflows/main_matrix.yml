@@ -79,18 +79,6 @@ jobs:
     with:
       board: ${{ matrix.board }}
 
-  build-rpi2040:
-    strategy:
-      fail-fast: false
-      max-parallel: 2
-      matrix:
-        include:
-          - board: pico
-          - board: rak11310
-    uses: ./.github/workflows/build_rpi2040.yml
-    with:
-      board: ${{ matrix.board }}
-
   after-checks:
     runs-on: ubuntu-latest
     needs: [check]
@@ -142,7 +130,9 @@ jobs:
 
       # For diagnostics
       - name: Show artifacts
-        run: ls -lR
+        run: |
+          ls -lR
+          ls ./output/
 
       - name: Device scripts permissions
         run: |
