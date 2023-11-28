@@ -209,8 +209,8 @@ extern NodeDB nodeDB;
 #define default_screen_on_secs 60 * 10
 
 #define default_mqtt_address "mqtt.0x21h.net"
-#define default_mqtt_username "meshdev"
-#define default_mqtt_password "large4cats"
+#define default_mqtt_username "meshtastic_ua"
+#define default_mqtt_password "meshtastic_ua"
 
 inline uint32_t getConfiguredOrDefaultMs(uint32_t configuredInterval)
 {
