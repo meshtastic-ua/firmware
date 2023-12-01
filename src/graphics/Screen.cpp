@@ -54,7 +54,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef OLED_UA
 #include "fonts/OLEDDisplayFontsUA.h"
 #endif
-
+//
+#ifdef EINK_UA
+#include "fonts/EInkDisplayFontsUA.h"
+#endif
+//
 using namespace meshtastic; /** @todo remove */
 
 namespace graphics
@@ -104,7 +108,15 @@ static uint16_t displayWidth, displayHeight;
 
 #if defined(USE_EINK) || defined(ILI9341_DRIVER) || defined(ST7735_CS)
 // The screen is bigger so use bigger fonts
-#define FONT_SMALL ArialMT_Plain_16  // Height: 19
+//#define FONT_SMALL ArialMT_Plain_16  // Height: 19
+//
+#ifdef EINK_UA
+#define FONT_SMALL ArialMT_Plain_16_UA // Height: 19
+#else
+#define FONT_SMALL ArialMT_Plain_16 // Height: 19
+#endif
+//
+
 #define FONT_MEDIUM ArialMT_Plain_24 // Height: 28
 #define FONT_LARGE ArialMT_Plain_24  // Height: 28
 #else
@@ -118,6 +130,8 @@ static uint16_t displayWidth, displayHeight;
 #endif
 #endif
 #define FONT_MEDIUM ArialMT_Plain_16 // Height: 19
+
+
 #define FONT_LARGE ArialMT_Plain_24  // Height: 28
 #endif
 

@@ -1,5 +1,5 @@
-#ifndef OLEDDISPLAYFONTSUA_h
-#define OLEDDISPLAYFONTSUA_h
+#ifndef ELINKDISPLAYFONTSUA_h
+#define ELINKDISPLAYFONTSUA_h
 
 #ifdef ARDUINO
 #include <Arduino.h>
