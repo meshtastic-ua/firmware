@@ -1,5 +1,6 @@
 #include "Router.h"
 #include "Channels.h"
+#include "PacketHistory.h"
 #include "CryptoEngine.h"
 #include "MeshRadio.h"
 #include "NodeDB.h"
@@ -247,7 +248,7 @@ ErrorCode Router::send(meshtastic_MeshPacket *p)
         ChannelIndex chIndex = p->channel; // keep as a local because we are about to change it
 
         bool shouldActuallyEncrypt = true;
-
+       PacketHistory pack_history;
 #if HAS_WIFI || HAS_ETHERNET
         if (moduleConfig.mqtt.enabled) {
             // check if we should send decrypted packets to mqtt
@@ -268,9 +269,14 @@ ErrorCode Router::send(meshtastic_MeshPacket *p)
 
             LOG_INFO("Should encrypt MQTT?: %d\n", shouldActuallyEncrypt);
 
+            // Fix MQTT Flood
             // the packet is currently in a decrypted state.  send it now if they want decrypted packets
-            if (mqtt && !shouldActuallyEncrypt)
-                mqtt->onSend(*p, chIndex);
+            if (!pack_history.wasSeenRecently(p)){
+                if (mqtt && !shouldActuallyEncrypt)
+                    mqtt->onSend(*p, chIndex);
+            }else{
+                LOG_DEBUG("MQTT flood msg");
+            }
         }
 #endif
 
@@ -279,13 +285,18 @@ ErrorCode Router::send(meshtastic_MeshPacket *p)
             abortSendAndNak(encodeResult, p);
             return encodeResult; // FIXME - this isn't a valid ErrorCode
         }
-
+        
 #if HAS_WIFI || HAS_ETHERNET
         if (moduleConfig.mqtt.enabled) {
             // the packet is now encrypted.
             // check if we should send encrypted packets to mqtt
-            if (mqtt && shouldActuallyEncrypt)
-                mqtt->onSend(*p, chIndex);
+            // Fix MQTT Flood
+            if (!pack_history.wasSeenRecently(p)){
+                if (mqtt && shouldActuallyEncrypt)
+                    mqtt->onSend(*p, chIndex);
+            }else{
+                LOG_DEBUG("MQTT flood msg");
+            }
         }
 #endif
     }
@@ -305,7 +316,8 @@ bool Router::cancelSending(NodeNum from, PacketId id)
  * update routing tables etc... based on what we overhear (even for messages not destined to our node)
  */
 void Router::sniffReceived(const meshtastic_MeshPacket *p, const meshtastic_Routing *c)
-{
+{   
+    //LOG_DEBUG("Packet: id:%x, from:%x, to:%x, payload:%x,portnum:%x",p->id,p->from,p->to,p->decoded.payload,p->decoded.portnum);
     // FIXME, update nodedb here for any packet that passes through us
 }
 
@@ -347,6 +359,7 @@ bool perhapsDecode(meshtastic_MeshPacket *p)
                 p->channel = chIndex;                                         // change to store the index instead of the hash
 
                 // Decompress if needed. jm
+                LOG_DEBUG("Pack:%x",p->decoded);
                 if (p->decoded.portnum == meshtastic_PortNum_TEXT_MESSAGE_COMPRESSED_APP) {
                     // Decompress the payload
                     char compressed_in[meshtastic_Constants_DATA_PAYLOAD_LEN] = {};

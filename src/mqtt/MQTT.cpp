@@ -232,7 +232,8 @@ void MQTT::reconnect()
         LOG_INFO("Connecting to MQTT server %s, port: %d, username: %s, password: %s\n", serverAddr, serverPort, mqttUsername,
                  mqttPassword);
         auto myStatus = (statusTopic + owner.id);
-        bool connected = pubSub.connect(owner.id, mqttUsername, mqttPassword, myStatus.c_str(), 1, true, "offline");
+        //QoS0
+        bool connected = pubSub.connect(owner.id, mqttUsername, mqttPassword, myStatus.c_str(), 0, true, "offline");
         if (connected) {
             LOG_INFO("MQTT connected\n");
             enabled = true; // Start running background process again
@@ -266,11 +267,11 @@ void MQTT::sendSubscriptions()
         if (ch.settings.downlink_enabled) {
             std::string topic = cryptTopic + channels.getGlobalId(i) + "/#";
             LOG_INFO("Subscribing to %s\n", topic.c_str());
-            pubSub.subscribe(topic.c_str(), 1); // FIXME, is QOS 1 right?
+            pubSub.subscribe(topic.c_str(), 0); // FIXME, is QOS 1 right?
             if (moduleConfig.mqtt.json_enabled == true) {
                 std::string topicDecoded = jsonTopic + channels.getGlobalId(i) + "/#";
                 LOG_INFO("Subscribing to %s\n", topicDecoded.c_str());
-                pubSub.subscribe(topicDecoded.c_str(), 1); // FIXME, is QOS 1 right?
+                pubSub.subscribe(topicDecoded.c_str(), 0); // FIXME, is QOS 1 right?
             }
         }
     }

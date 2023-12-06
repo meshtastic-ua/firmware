@@ -3,10 +3,12 @@
 #include "Channels.h"
 #include "MemoryPool.h"
 #include "MeshTypes.h"
+#include "PacketHistory.h"
 #include "Observer.h"
 #include "PointerQueue.h"
 #include "RadioInterface.h"
 #include "concurrency/OSThread.h"
+
 
 /**
  * A mesh aware router that supports multiple interfaces.
