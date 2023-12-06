@@ -105,7 +105,7 @@ const RegionInfo regions[] = {
         868,0-868,6 Mhz 25 mW
         https://nkrzi.gov.ua/images/upload/256/5810/PDF_UUZ_19_01_2016.pdf
     */
-    RDEF(UA_868, 868.0f, 868.6f, 1, 0, 14, true, false, false),
+    RDEF(UA_868, 868.0f, 868.6f, 1, 0, 22, true, false, false),
 
     /*
        2.4 GHZ WLAN Band equivalent. Only for SX128x chips.
