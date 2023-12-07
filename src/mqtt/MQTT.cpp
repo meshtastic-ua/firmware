@@ -362,6 +362,7 @@ void MQTT::onSend(const meshtastic_MeshPacket &mp, ChannelIndex chIndex)
 {
     auto &ch = channels.getByIndex(chIndex);
 
+
     if (ch.settings.uplink_enabled) {
         const char *channelId = channels.getGlobalId(chIndex); // FIXME, for now we just use the human name for the channel
 
@@ -369,6 +370,12 @@ void MQTT::onSend(const meshtastic_MeshPacket &mp, ChannelIndex chIndex)
         env->channel_id = (char *)channelId;
         env->gateway_id = owner.id;
         env->packet = (meshtastic_MeshPacket *)&mp;
+
+    //Log hop limit >5
+    if (env->packet->hop_limit > 5){
+        LOG_DEBUG("Hop limit is big id=%x from=%x hop=%x", env->packet->id, env->packet->from, env->packet->hop_limit);
+    }
+          
 
         // don't bother sending if not connected...
         if (pubSub.connected()) {

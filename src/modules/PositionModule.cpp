@@ -164,7 +164,9 @@ int32_t PositionModule::runOnce()
                 lastGpsLongitude = node->position.longitude_i;
 
                 // If we changed channels, ask everyone else for their latest info
-                bool requestReplies = currentGeneration != radioGeneration;
+                //bool requestReplies = currentGeneration != radioGeneration;
+                //Don't request position fix
+                bool requestReplies = false;
                 currentGeneration = radioGeneration;
 
                 LOG_INFO("Sending pos@%x:6 to mesh (wantReplies=%d)\n", localPosition.timestamp, requestReplies);
@@ -191,7 +193,9 @@ int32_t PositionModule::runOnce()
                                              node->position.longitude_i * 1e-7);
 
                 if ((abs(distanceTraveledSinceLastSend) >= distanceTravelThreshold) && msSinceLastSend >= minimumTimeThreshold) {
-                    bool requestReplies = currentGeneration != radioGeneration;
+                    //bool requestReplies = currentGeneration != radioGeneration;
+                    //Don't request position fix
+                    bool requestReplies = false;
                     currentGeneration = radioGeneration;
 
                     LOG_INFO("Sending smart pos@%x:6 to mesh (distanceTraveled=%fm, minDistanceThreshold=%im, timeElapsed=%ims, "

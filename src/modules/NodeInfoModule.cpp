@@ -84,7 +84,9 @@ int32_t NodeInfoModule::runOnce()
     static uint32_t currentGeneration;
 
     // If we changed channels, ask everyone else for their latest info
-    bool requestReplies = currentGeneration != radioGeneration;
+    //bool requestReplies = currentGeneration != radioGeneration;
+    // Don't ask nodeinfo fix
+    bool requestReplies = false;
     currentGeneration = radioGeneration;
 
     if (airTime->isTxAllowedAirUtil()) {
