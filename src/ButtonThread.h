@@ -176,23 +176,23 @@ class ButtonThread : public concurrency::OSThread
 
     static void userButtonPressedLongStart()
     {
-        if (millis() > 30 * 1000) {
-            LOG_DEBUG("Long press start!\n");
-            longPressTime = millis();
-        }
+       // if (millis() > 30 * 1000) {
+       //     LOG_DEBUG("Long press start!\n");
+       //     longPressTime = millis();
+       // }
     }
 
     static void userButtonPressedLongStop()
     {
-        if (millis() > 30 * 1000) {
-            LOG_DEBUG("Long press stop!\n");
-            longPressTime = 0;
-            if (shutdown_on_long_stop) {
-                playShutdownMelody();
-                delay(3000);
-                power->shutdown();
-            }
-        }
+      //  if (millis() > 30 * 1000) {
+      //      LOG_DEBUG("Long press stop!\n");
+      //      longPressTime = 0;
+      //      if (shutdown_on_long_stop) {
+      //          playShutdownMelody();
+      //          delay(3000);
+      //          power->shutdown();
+      //      }
+      //  }
     }
 };
 
