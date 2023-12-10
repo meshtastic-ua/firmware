@@ -21,7 +21,7 @@
 #include <pb_encode.h>
 
 #ifdef ARCH_ESP32
-#include "mesh/http/WiFiAPClient.h"
+#include "mesh/wifi/WiFiAPClient.h"
 #include "modules/esp32/StoreForwardModule.h"
 #include <Preferences.h>
 #include <nvs_flash.h>
@@ -249,6 +249,12 @@ void NodeDB::installDefaultModuleConfig()
     // Don't worry about the other settings, we'll use the DRV2056 behavior for notifications
     moduleConfig.external_notification.enabled = true;
 #endif
+#ifdef NANO_G2_ULTRA
+    moduleConfig.external_notification.enabled = true;
+    moduleConfig.external_notification.alert_message = true;
+    moduleConfig.external_notification.output_ms = 100;
+    moduleConfig.external_notification.active = true;
+#endif
     moduleConfig.has_canned_message = true;
 
     strncpy(moduleConfig.mqtt.address, default_mqtt_address, sizeof(moduleConfig.mqtt.address));
@@ -296,6 +302,15 @@ void NodeDB::installRoleDefaults(meshtastic_Config_DeviceConfig_Role role)
             (meshtastic_Config_PositionConfig_PositionFlags_ALTITUDE | meshtastic_Config_PositionConfig_PositionFlags_SPEED |
              meshtastic_Config_PositionConfig_PositionFlags_HEADING | meshtastic_Config_PositionConfig_PositionFlags_DOP);
         moduleConfig.telemetry.device_update_interval = ONE_DAY;
+    } else if (role == meshtastic_Config_DeviceConfig_Role_CLIENT_HIDDEN) {
+        config.device.rebroadcast_mode = meshtastic_Config_DeviceConfig_RebroadcastMode_LOCAL_ONLY;
+        config.device.node_info_broadcast_secs = UINT32_MAX;
+        config.position.position_broadcast_smart_enabled = false;
+        config.position.position_broadcast_secs = UINT32_MAX;
+        moduleConfig.neighbor_info.update_interval = UINT32_MAX;
+        moduleConfig.telemetry.device_update_interval = UINT32_MAX;
+        moduleConfig.telemetry.environment_update_interval = UINT32_MAX;
+        moduleConfig.telemetry.air_quality_interval = UINT32_MAX;
     }
 }
 
@@ -370,7 +385,6 @@ void NodeDB::installDefaultDeviceState()
     pickNewNodeNum(); // based on macaddr now
     snprintf(owner.long_name, sizeof(owner.long_name), "Meshtastic %02x%02x", ourMacAddr[4], ourMacAddr[5]);
     snprintf(owner.short_name, sizeof(owner.short_name), "%02x%02x", ourMacAddr[4], ourMacAddr[5]);
-
     snprintf(owner.id, sizeof(owner.id), "!%08x", getNodeNum()); // Default node ID now based on nodenum
     memcpy(owner.macaddr, ourMacAddr, sizeof(owner.macaddr));
 }
@@ -395,6 +409,8 @@ void NodeDB::init()
 
     // Set our board type so we can share it with others
     owner.hw_model = HW_VENDOR;
+    // Ensure user (nodeinfo) role is set to whatever we're configured to
+    owner.role = config.device.role;
 
     // Include our owner in the node db under our nodenum
     meshtastic_NodeInfoLite *info = getOrCreateMeshNode(getNodeNum());
