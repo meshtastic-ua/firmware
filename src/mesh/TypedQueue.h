@@ -72,11 +72,16 @@ template <class T> class TypedQueue
 {
     std::queue<T> q;
     concurrency::OSThread *reader = NULL;
+    int maxElements;
 
   public:
-    explicit TypedQueue(int maxElements) {}
+    explicit TypedQueue(int maxElements) {
+        maxElements = maxElements;
+    }
 
-    int numFree() { return 1; } // Always claim 1 free, because we can grow to any size
+    int numFree() {
+        return maxElements - q.size();
+    } // return real size of elements allowed to be added to queue
 
     bool isEmpty() { return q.empty(); }
 
