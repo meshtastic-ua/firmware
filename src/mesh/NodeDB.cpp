@@ -178,9 +178,9 @@ void NodeDB::installDefaultConfig()
     config.device.disable_triple_click = true;
 #endif
     config.position.gps_enabled = true;
-    config.position.position_broadcast_smart_enabled = true;
-    config.position.broadcast_smart_minimum_distance = 100;
-    config.position.broadcast_smart_minimum_interval_secs = 30;
+    config.position.position_broadcast_smart_enabled = false;
+    config.position.broadcast_smart_minimum_distance = 1000;
+    config.position.broadcast_smart_minimum_interval_secs = 60;
     if (config.device.role != meshtastic_Config_DeviceConfig_Role_ROUTER)
         config.device.node_info_broadcast_secs = 3 * 60 * 60;
     config.device.serial_enabled = true;
