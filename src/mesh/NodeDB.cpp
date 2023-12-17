@@ -234,12 +234,12 @@ void NodeDB::installDefaultConfig()
     config.has_power = true;
     config.has_network = true;
     config.has_bluetooth = (HAS_BLUETOOTH ? true : false);
-    config.device.rebroadcast_mode = meshtastic_Config_DeviceConfig_RebroadcastMode_ALL;
+    config.device.rebroadcast_mode = meshtastic_Config_DeviceConfig_RebroadcastMode_LOCAL_ONLY;
 
     config.lora.sx126x_rx_boosted_gain = true;
     config.lora.tx_enabled =
         true; // FIXME: maybe false in the future, and setting region to enable it. (unset region forces it off)
-    config.lora.override_duty_cycle = false;
+    config.lora.override_duty_cycle = true;
     config.lora.region = meshtastic_Config_LoRaConfig_RegionCode_UNSET;
     config.lora.modem_preset = meshtastic_Config_LoRaConfig_ModemPreset_LONG_FAST;
     config.lora.hop_limit = HOP_RELIABLE;

@@ -66,6 +66,7 @@ jobs:
           - board: tlora-v2-1-1_6
           - board: tlora-v2-1-1_6-tcxo
           - board: tlora-v2-1-1_8
+          - board: meshtastic-diy-v1_APRS
           - board: tbeam
           - board: heltec-v2_0
           - board: heltec-v2_1
