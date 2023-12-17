@@ -16,6 +16,10 @@
 #include "graphics/fonts/OLEDDisplayFontsUA.h"
 #endif
 
+#ifdef EINK_UA
+#include "fonts/EInkDisplayFontsUA.h"
+#endif
+
 /*
     AudioModule
         A interface to send raw codec2 audio data over the mesh network. Based on the example code from the ESP32_codec2 project.
@@ -52,7 +56,11 @@ AudioModule *audioModule;
     !defined(DISPLAY_FORCE_SMALL_FONTS)
 
 // The screen is bigger so use bigger fonts
-#define FONT_SMALL ArialMT_Plain_16
+#ifdef EINK_UA
+#define FONT_SMALL ArialMT_Plain_16_UA // Height: 19
+#else
+#define FONT_SMALL ArialMT_Plain_16 // Height: 19
+#endif
 #define FONT_MEDIUM ArialMT_Plain_24
 #define FONT_LARGE ArialMT_Plain_24
 #else
