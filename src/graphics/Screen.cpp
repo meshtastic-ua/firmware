@@ -64,6 +64,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "fonts/OLEDDisplayFontsUA.h"
 #endif
 
+#ifdef EINK_UA
+#include "fonts/EInkDisplayFontsUA.h"
+#endif
+
 using namespace meshtastic; /** @todo remove */
 
 namespace graphics
@@ -114,7 +118,11 @@ static uint16_t displayWidth, displayHeight;
 #if (defined(USE_EINK) || defined(ILI9341_DRIVER) || defined(ST7735_CS) || defined(ST7789_CS)) &&                                \
     !defined(DISPLAY_FORCE_SMALL_FONTS)
 // The screen is bigger so use bigger fonts
-#define FONT_SMALL ArialMT_Plain_16  // Height: 19
+#ifdef EINK_UA
+#define FONT_SMALL ArialMT_Plain_16_UA // Height: 19
+#else
+#define FONT_SMALL ArialMT_Plain_16 // Height: 19
+#endif
 #define FONT_MEDIUM ArialMT_Plain_24 // Height: 28
 #define FONT_LARGE ArialMT_Plain_24  // Height: 28
 #else
@@ -154,7 +162,7 @@ static void drawIconScreen(const char *upperMsg, OLEDDisplay *display, OLEDDispl
 
     display->setFont(FONT_MEDIUM);
     display->setTextAlignment(TEXT_ALIGN_LEFT);
-    const char *title = "meshtastic.org";
+    const char *title = "wikimesh.pp.ua";
     display->drawString(x + getStringCenteredX(title), y + SCREEN_HEIGHT - FONT_HEIGHT_MEDIUM, title);
     display->setFont(FONT_SMALL);
 
