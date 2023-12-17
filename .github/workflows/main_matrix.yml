@@ -53,6 +53,7 @@ jobs:
           - board: tlora-v2
           - board: tlora-v2-1-1_6
           - board: tlora-v2-1-1_8
+          - board: meshtastic-diy-v1_APRS
           - board: tbeam
     uses: ./.github/workflows/build_esp32.yml
     with:
