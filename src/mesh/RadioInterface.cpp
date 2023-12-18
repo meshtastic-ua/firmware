@@ -27,7 +27,7 @@ const RegionInfo regions[] = {
     /*
         https://lora-alliance.org/wp-content/uploads/2020/11/lorawan_regional_parameters_v1.0.3reva_0.pdf
      */
-    RDEF(EU_433, 433.0f, 434.0f, 10, 0, 22, true, false, false),
+    RDEF(EU_433, 433.0f, 434.0f, 10, 0, 12, true, false, false),
 
     /*
         https://www.thethingsnetwork.org/docs/lorawan/duty-cycle/
@@ -99,7 +99,7 @@ const RegionInfo regions[] = {
         433,05-434,7 Mhz 10 mW
         https://nkrzi.gov.ua/images/upload/256/5810/PDF_UUZ_19_01_2016.pdf
     */
-    RDEF(UA_433, 433.0f, 434.7f, 10, 0, 22, true, false, false),
+    RDEF(UA_433, 433.0f, 434.7f, 10, 0, 10, true, false, false),
 
     /*
         868,0-868,6 Mhz 25 mW
