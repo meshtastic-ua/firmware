@@ -208,13 +208,13 @@ jobs:
         run: echo "version=$(./bin/buildinfo.py long)" >> $GITHUB_OUTPUT
         id: version
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: firmware-${{ steps.version.outputs.version }}
-          path: ./output
-      - uses: actions/download-artifact@v3
-        with:
-          name: artifact-deb
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: firmware-${{ steps.version.outputs.version }}
+      #     path: ./output
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: artifact-deb
 
       - name: Display structure of downloaded files
         run: ls -R
