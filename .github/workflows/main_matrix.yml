@@ -150,8 +150,6 @@ jobs:
             ./firmware-*-ota.zip
             ./device-*.sh
             ./device-*.bat
-            ./meshtasticd_linux_arm64
-            ./config-dist.yaml
           retention-days: 90
 
       - uses: actions/download-artifact@v3
@@ -208,13 +206,10 @@ jobs:
         run: echo "version=$(./bin/buildinfo.py long)" >> $GITHUB_OUTPUT
         id: version
 
-      # - uses: actions/download-artifact@v3
-      #   with:
-      #     name: firmware-${{ steps.version.outputs.version }}
-      #     path: ./output
-      # - uses: actions/download-artifact@v3
-      #   with:
-      #     name: artifact-deb
+      - uses: actions/download-artifact@v3
+        with:
+          name: firmware-${{ steps.version.outputs.version }}
+          path: ./output
 
       - name: Display structure of downloaded files
         run: ls -R
@@ -271,13 +266,3 @@ jobs:
           asset_path: ./debug-elfs-${{ steps.version.outputs.version }}.zip
           asset_name: debug-elfs-${{ steps.version.outputs.version }}.zip
           asset_content_type: application/zip
-
-      - name: Bump version.properties
-        run: >-
-          bin/bump_version.py
-
-      - name: Create version.properties pull request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          add-paths: |
-            version.properties
