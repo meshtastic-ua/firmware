@@ -291,12 +291,10 @@ ErrorCode Router::send(meshtastic_MeshPacket *p)
             // the packet is now encrypted.
             // check if we should send encrypted packets to mqtt
             // Fix MQTT Flood
-            if (!pack_history.wasSeenRecently(p)){
+            
                 if (mqtt && shouldActuallyEncrypt)
                     mqtt->onSend(*p, chIndex);
-            }else{
-                LOG_DEBUG("MQTT flood msg");
-            }
+            
         }
 #endif
     }
