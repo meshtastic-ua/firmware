@@ -133,8 +133,16 @@ void MQTT::onPublish(char *topic, byte *payload, unsigned int length)
                     LOG_INFO("Received MQTT topic %s, len=%u\n", topic, length);
                     meshtastic_MeshPacket *p = packetPool.allocCopy(*e.packet);
 
+                    //fix from https://github.com/meshtastic/firmware/commit/d88baea627526268ff6ba0361ddb91f86c2ae050
+                    // remove from 
                     // ignore messages sent by us or if we don't have the channel key
-                    if (router && p->from != nodeDB.getNodeNum() && perhapsDecode(p))
+                    //if (router && p->from != nodeDB.getNodeNum() && perhapsDecode(p))
+                    // here
+
+                    // add from    
+                    // ignore messages if we don't have the channel key    
+                        if (router && perhapsDecode(p))
+                    //here    
                         router->enqueueReceivedMessage(p);
                     else
                         packetPool.release(p);
