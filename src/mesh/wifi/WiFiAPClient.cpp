@@ -48,19 +48,15 @@ Periodic *wifiReconnect;
 
 static void onNetworkConnected()
 {
-    if (!APStartupComplete)
-    {
+    if (!APStartupComplete) {
         // Start web server
         LOG_INFO("Starting network services\n");
 
 #ifdef ARCH_ESP32
         // start mdns
-        if (!MDNS.begin("Meshtastic"))
-        {
+        if (!MDNS.begin("Meshtastic")) {
             LOG_ERROR("Error setting up MDNS responder!\n");
-        }
-        else
-        {
+        } else {
             LOG_INFO("mDNS responder started\n");
             LOG_INFO("mDNS Host: Meshtastic.local\n");
             MDNS.addService("http", "tcp", 80);
@@ -76,16 +72,14 @@ static void onNetworkConnected()
         timeClient.setUpdateInterval(60 * 60); // Update once an hour
 #endif
 
-        if (config.network.rsyslog_server[0])
-        {
+        if (config.network.rsyslog_server[0]) {
             LOG_INFO("Starting Syslog client\n");
             // Defaults
             int serverPort = 514;
             const char *serverAddr = config.network.rsyslog_server;
             String server = String(serverAddr);
             int delimIndex = server.indexOf(':');
-            if (delimIndex > 0)
-            {
+            if (delimIndex > 0) {
                 String port = server.substring(delimIndex + 1, server.length());
                 server[delimIndex] = 0;
                 serverPort = port.toInt();
@@ -116,8 +110,7 @@ static int32_t reconnectWiFi()
     const char *wifiName = config.network.wifi_ssid;
     const char *wifiPsw = config.network.wifi_psk;
 
-    if (config.network.wifi_enabled && needReconnect)
-    {
+    if (config.network.wifi_enabled && needReconnect) {
 
         if (!*wifiPsw) // Treat empty password as no password
             wifiPsw = NULL;
@@ -135,19 +128,16 @@ static int32_t reconnectWiFi()
 
         delay(5000);
 
-        if (!WiFi.isConnected())
-        {
+        if (!WiFi.isConnected()) {
             WiFi.begin(wifiName, wifiPsw);
         }
         isReconnecting = false;
     }
 
 #ifndef DISABLE_NTP
-    if (WiFi.isConnected() && (((millis() - lastrun_ntp) > 43200000) || (lastrun_ntp == 0)))
-    { // every 12 hours
+    if (WiFi.isConnected() && (((millis() - lastrun_ntp) > 43200000) || (lastrun_ntp == 0))) { // every 12 hours
         LOG_DEBUG("Updating NTP time from %s\n", config.network.ntp_server);
-        if (timeClient.update())
-        {
+        if (timeClient.update()) {
             LOG_DEBUG("NTP Request Success - Setting RTCQualityNTP if needed\n");
 
             struct timeval tv;
@@ -156,25 +146,20 @@ static int32_t reconnectWiFi()
 
             perhapsSetRTC(RTCQualityNTP, &tv);
             lastrun_ntp = millis();
-        }
-        else
-        {
+        } else {
             LOG_DEBUG("NTP Update failed\n");
         }
     }
 #endif
 
-    if (config.network.wifi_enabled && !WiFi.isConnected())
-    {
+    if (config.network.wifi_enabled && !WiFi.isConnected()) {
 #ifdef ARCH_RP2040 // (ESP32 handles this in WiFiEvent)
         /* If APStartupComplete, but we're not connected, try again.
            Shouldn't try again before APStartupComplete. */
         needReconnect = APStartupComplete;
 #endif
         return 1000; // check once per second
-    }
-    else
-    {
+    } else {
 #ifdef ARCH_RP2040
         onNetworkConnected(); // will only do anything once
 #endif
@@ -185,12 +170,9 @@ static int32_t reconnectWiFi()
 bool isWifiAvailable()
 {
 
-    if (config.network.wifi_enabled && (config.network.wifi_ssid[0]))
-    {
+    if (config.network.wifi_enabled && (config.network.wifi_ssid[0])) {
         return true;
-    }
-    else
-    {
+    } else {
         return false;
     }
 }
@@ -200,8 +182,7 @@ void deinitWifi()
 {
     LOG_INFO("WiFi deinit\n");
 
-    if (isWifiAvailable())
-    {
+    if (isWifiAvailable()) {
 #ifdef ARCH_ESP32
         WiFi.disconnect(true, false);
 #else
@@ -216,8 +197,7 @@ void deinitWifi()
 // Startup WiFi
 bool initWifi()
 {
-    if (config.network.wifi_enabled && config.network.wifi_ssid[0])
-    {
+    if (config.network.wifi_enabled && config.network.wifi_ssid[0]) {
 
         const char *wifiName = config.network.wifi_ssid;
         const char *wifiPsw = config.network.wifi_psk;
@@ -229,8 +209,7 @@ bool initWifi()
         if (!*wifiPsw) // Treat empty password as no password
             wifiPsw = NULL;
 
-        if (*wifiName)
-        {
+        if (*wifiName) {
             uint8_t dmac[6];
             getMacAddr(dmac);
             snprintf(ourHost, sizeof(ourHost), "Meshtastic-%02x%02x", dmac[4], dmac[5]);
@@ -238,8 +217,7 @@ bool initWifi()
             WiFi.mode(WIFI_STA);
             WiFi.setHostname(ourHost);
             if (config.network.address_mode == meshtastic_Config_NetworkConfig_AddressMode_STATIC &&
-                config.network.ipv4_config.ip != 0)
-            {
+                config.network.ipv4_config.ip != 0) {
                 WiFi.config(config.network.ipv4_config.ip, config.network.ipv4_config.gateway, config.network.ipv4_config.subnet,
                             config.network.ipv4_config.dns);
             }
@@ -252,8 +230,7 @@ bool initWifi()
             esp_wifi_set_ps(WIFI_PS_NONE); // Disable radio power saving
 
             WiFi.onEvent(
-                [](WiFiEvent_t event, WiFiEventInfo_t info)
-                {
+                [](WiFiEvent_t event, WiFiEventInfo_t info) {
                     LOG_WARN("WiFi lost connection. Reason: %d\n", info.wifi_sta_disconnected.reason);
 
                     /*
@@ -271,9 +248,7 @@ bool initWifi()
             wifiReconnect = new Periodic("WifiConnect", reconnectWiFi);
         }
         return true;
-    }
-    else
-    {
+    } else {
         LOG_INFO("Not using WIFI\n");
         return false;
     }
@@ -285,8 +260,7 @@ static void WiFiEvent(WiFiEvent_t event)
 {
     LOG_DEBUG("WiFi-Event %d: ", event);
 
-    switch (event)
-    {
+    switch (event) {
     case ARDUINO_EVENT_WIFI_READY:
         LOG_INFO("WiFi interface ready\n");
         break;
@@ -305,8 +279,7 @@ static void WiFiEvent(WiFiEvent_t event)
         break;
     case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
         LOG_INFO("Disconnected from WiFi access point\n");
-        if (!isReconnecting)
-        {
+        if (!isReconnecting) {
             WiFi.disconnect(false, true);
             syslog.disable();
             needReconnect = true;
@@ -325,8 +298,7 @@ static void WiFiEvent(WiFiEvent_t event)
         break;
     case ARDUINO_EVENT_WIFI_STA_LOST_IP:
         LOG_INFO("Lost IP address and IP address is reset to 0\n");
-        if (!isReconnecting)
-        {
+        if (!isReconnecting) {
             WiFi.disconnect(false, true);
             syslog.disable();
             needReconnect = true;

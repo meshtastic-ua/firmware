@@ -12,14 +12,13 @@
  * A wrapper for freertos queues.  Note: each element object should be small
  * and POD (Plain Old Data type) as elements are memcpied by value.
  */
-template <class T>
-class TypedQueue
+template <class T> class TypedQueue
 {
     static_assert(std::is_pod<T>::value, "T must be pod");
     QueueHandle_t h;
     concurrency::OSThread *reader = NULL;
 
-public:
+  public:
     explicit TypedQueue(int maxElements) : h(xQueueCreate(maxElements, sizeof(T))) { assert(h); }
 
     ~TypedQueue() { vQueueDelete(h); }
@@ -32,8 +31,7 @@ public:
      * they want */
     bool enqueue(T x, TickType_t maxWait)
     {
-        if (reader)
-        {
+        if (reader) {
             reader->setInterval(0);
             concurrency::mainDelay.interrupt();
         }
@@ -42,8 +40,7 @@ public:
 
     bool enqueueFromISR(T x, BaseType_t *higherPriWoken)
     {
-        if (reader)
-        {
+        if (reader) {
             reader->setInterval(0);
             concurrency::mainDelay.interruptFromISR(higherPriWoken);
         }
@@ -71,14 +68,13 @@ public:
  * A wrapper for freertos queues.  Note: each element object should be small
  * and POD (Plain Old Data type) as elements are memcpied by value.
  */
-template <class T>
-class TypedQueue
+template <class T> class TypedQueue
 {
     std::queue<T> q;
     concurrency::OSThread *reader = NULL;
     int maxElements;
 
-public:
+  public:
     explicit TypedQueue(int maxElements) { this->maxElements = maxElements; }
 
     int numFree() { return this->maxElements - q.size(); }
@@ -87,18 +83,14 @@ public:
 
     bool enqueue(T x, TickType_t maxWait = portMAX_DELAY)
     {
-        if (reader)
-        {
+        if (reader) {
             reader->setInterval(0);
             concurrency::mainDelay.interrupt();
         }
-        if (this->maxElements < q.size())
-        {
+        if (this->maxElements < q.size()) {
             q.push(x);
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -109,8 +101,7 @@ public:
     {
         if (isEmpty())
             return false;
-        else
-        {
+        else {
             *p = q.front();
             q.pop();
             return true;
