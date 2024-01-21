@@ -12,13 +12,14 @@
  * A wrapper for freertos queues.  Note: each element object should be small
  * and POD (Plain Old Data type) as elements are memcpied by value.
  */
-template <class T> class TypedQueue
+template <class T>
+class TypedQueue
 {
     static_assert(std::is_pod<T>::value, "T must be pod");
     QueueHandle_t h;
     concurrency::OSThread *reader = NULL;
 
-  public:
+public:
     explicit TypedQueue(int maxElements) : h(xQueueCreate(maxElements, sizeof(T))) { assert(h); }
 
     ~TypedQueue() { vQueueDelete(h); }
@@ -31,7 +32,8 @@ template <class T> class TypedQueue
      * they want */
     bool enqueue(T x, TickType_t maxWait)
     {
-        if (reader) {
+        if (reader)
+        {
             reader->setInterval(0);
             concurrency::mainDelay.interrupt();
         }
@@ -40,7 +42,8 @@ template <class T> class TypedQueue
 
     bool enqueueFromISR(T x, BaseType_t *higherPriWoken)
     {
-        if (reader) {
+        if (reader)
+        {
             reader->setInterval(0);
             concurrency::mainDelay.interruptFromISR(higherPriWoken);
         }
@@ -68,33 +71,34 @@ template <class T> class TypedQueue
  * A wrapper for freertos queues.  Note: each element object should be small
  * and POD (Plain Old Data type) as elements are memcpied by value.
  */
-template <class T> class TypedQueue
+template <class T>
+class TypedQueue
 {
     std::queue<T> q;
     concurrency::OSThread *reader = NULL;
     int maxElements;
 
-  public:
-    explicit TypedQueue(int maxElements) {
-        this->maxElements = maxElements;
-    }
+public:
+    explicit TypedQueue(int maxElements) { this->maxElements = maxElements; }
 
-    int numFree() {
-        return this->maxElements - q.size();
-    } // return real size of elements allowed to be added to queue
+    int numFree() { return this->maxElements - q.size(); }
 
     bool isEmpty() { return q.empty(); }
 
     bool enqueue(T x, TickType_t maxWait = portMAX_DELAY)
     {
-        if (reader) {
+        if (reader)
+        {
             reader->setInterval(0);
             concurrency::mainDelay.interrupt();
         }
-        if (this->maxElements < q.size()) {
+        if (this->maxElements < q.size())
+        {
             q.push(x);
             return true;
-        } else {
+        }
+        else
+        {
             return false;
         }
     }
@@ -105,7 +109,8 @@ template <class T> class TypedQueue
     {
         if (isEmpty())
             return false;
-        else {
+        else
+        {
             *p = q.front();
             q.pop();
             return true;

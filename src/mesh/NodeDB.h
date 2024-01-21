@@ -194,14 +194,14 @@ extern NodeDB nodeDB;
 
 #define default_gps_attempt_time IF_ROUTER(5 * 60, 15 * 60)
 #define default_gps_update_interval IF_ROUTER(ONE_DAY, 2 * 60)
-#define default_broadcast_interval_secs IF_ROUTER(ONE_DAY / 2, 15 * 60)
+#define default_broadcast_interval_secs IF_ROUTER(ONE_DAY / 2, 60 * 60)
 #define default_wait_bluetooth_secs IF_ROUTER(1, 60)
 #define default_sds_secs IF_ROUTER(ONE_DAY, UINT32_MAX) // Default to forever super deep sleep
 #define default_ls_secs IF_ROUTER(ONE_DAY, 5 * 60)
 #define default_min_wake_secs 10
 #define default_screen_on_secs IF_ROUTER(1, 60 * 10)
 
-#define default_mqtt_address "mqtt.meshtastic.org"
+#define default_mqtt_address "mqtt.0x21h.net"
 #define default_mqtt_username "meshdev"
 #define default_mqtt_password "large4cats"
 #define default_mqtt_root "msh"

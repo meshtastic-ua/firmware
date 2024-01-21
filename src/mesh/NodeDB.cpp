@@ -160,12 +160,12 @@ void NodeDB::installDefaultConfig()
     config.has_power = true;
     config.has_network = true;
     config.has_bluetooth = true;
-    config.device.rebroadcast_mode = meshtastic_Config_DeviceConfig_RebroadcastMode_ALL;
+    config.device.rebroadcast_mode = meshtastic_Config_DeviceConfig_RebroadcastMode_LOCAL_ONLY;
 
     config.lora.sx126x_rx_boosted_gain = true;
     config.lora.tx_enabled =
         true; // FIXME: maybe false in the future, and setting region to enable it. (unset region forces it off)
-    config.lora.override_duty_cycle = false;
+    config.lora.override_duty_cycle = true;
     config.lora.region = meshtastic_Config_LoRaConfig_RegionCode_UNSET;
     config.lora.modem_preset = meshtastic_Config_LoRaConfig_ModemPreset_LONG_FAST;
     config.lora.hop_limit = HOP_RELIABLE;
@@ -178,9 +178,9 @@ void NodeDB::installDefaultConfig()
     config.device.disable_triple_click = true;
 #endif
     config.position.gps_enabled = true;
-    config.position.position_broadcast_smart_enabled = true;
-    config.position.broadcast_smart_minimum_distance = 100;
-    config.position.broadcast_smart_minimum_interval_secs = 30;
+    config.position.position_broadcast_smart_enabled = false;
+    config.position.broadcast_smart_minimum_distance = 1000;
+    config.position.broadcast_smart_minimum_interval_secs = 60;
     if (config.device.role != meshtastic_Config_DeviceConfig_Role_ROUTER)
         config.device.node_info_broadcast_secs = 3 * 60 * 60;
     config.device.serial_enabled = true;

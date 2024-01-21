@@ -67,7 +67,7 @@ const RegionInfo regions[] = {
         Note:
             - We do LBT, so 100% is allowed.
      */
-    RDEF(RU, 868.7f, 869.2f, 100, 0, 20, true, false, false),
+    RDEF(RU, 868.7f, 869.2f, 100, 0, 1, true, false, false),
 
     /*
         ???
