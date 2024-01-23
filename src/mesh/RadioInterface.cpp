@@ -99,7 +99,7 @@ const RegionInfo regions[] = {
         433,05-434,7 Mhz 10 mW
         https://nkrzi.gov.ua/images/upload/256/5810/PDF_UUZ_19_01_2016.pdf
     */
-    RDEF(UA_433, 433.0f, 434.7f, 10, 0, 10, true, false, false),
+    RDEF(UA_433, 433.0f, 434.7f, 10, 0, 22, true, false, false),
 
     /*
         868,0-868,6 Mhz 25 mW
@@ -178,9 +178,12 @@ uint32_t RadioInterface::getPacketTime(uint32_t pl)
 uint32_t RadioInterface::getPacketTime(const meshtastic_MeshPacket *p)
 {
     uint32_t pl = 0;
-    if (p->which_payload_variant == meshtastic_MeshPacket_encrypted_tag) {
+    if (p->which_payload_variant == meshtastic_MeshPacket_encrypted_tag)
+    {
         pl = p->encrypted.size + sizeof(PacketHeader);
-    } else {
+    }
+    else
+    {
         size_t numbytes = pb_encode_to_bytes(bytes, sizeof(bytes), &meshtastic_Data_msg, &p->decoded);
         pl = numbytes + sizeof(PacketHeader);
     }
@@ -229,10 +232,13 @@ uint32_t RadioInterface::getTxDelayMsecWeighted(float snr)
     // LOG_DEBUG("rx_snr of %f so setting CWsize to:%d\n", snr, CWsize);
     if (config.device.role == meshtastic_Config_DeviceConfig_Role_ROUTER ||
         config.device.role == meshtastic_Config_DeviceConfig_Role_ROUTER_CLIENT ||
-        config.device.role == meshtastic_Config_DeviceConfig_Role_REPEATER) {
+        config.device.role == meshtastic_Config_DeviceConfig_Role_REPEATER)
+    {
         delay = random(0, 2 * CWsize) * slotTimeMsec;
         LOG_DEBUG("rx_snr found in packet. As a router, setting tx delay:%d\n", delay);
-    } else {
+    }
+    else
+    {
         // offset the maximum delay for routers: (2 * CWmax * slotTimeMsec)
         delay = (2 * CWmax * slotTimeMsec) + random(0, pow(2, CWsize)) * slotTimeMsec;
         LOG_DEBUG("rx_snr found in packet. Setting tx delay:%d\n", delay);
@@ -246,7 +252,8 @@ void printPacket(const char *prefix, const meshtastic_MeshPacket *p)
 #ifdef DEBUG_PORT
     std::string out = DEBUG_PORT.mt_sprintf("%s (id=0x%08x fr=0x%02x to=0x%02x, WantAck=%d, HopLim=%d Ch=0x%x", prefix, p->id,
                                             p->from & 0xff, p->to & 0xff, p->want_ack, p->hop_limit, p->channel);
-    if (p->which_payload_variant == meshtastic_MeshPacket_decoded_tag) {
+    if (p->which_payload_variant == meshtastic_MeshPacket_decoded_tag)
+    {
         auto &s = p->decoded;
 
         out += DEBUG_PORT.mt_sprintf(" Portnum=%d", s.portnum);
@@ -268,17 +275,22 @@ void printPacket(const char *prefix, const meshtastic_MeshPacket *p)
             out += DEBUG_PORT.mt_sprintf(" successId=%08x", s.ackVariant.success_id);
         else if (s.which_ackVariant == SubPacket_fail_id_tag)
             out += DEBUG_PORT.mt_sprintf(" failId=%08x", s.ackVariant.fail_id); */
-    } else {
+    }
+    else
+    {
         out += " encrypted";
     }
 
-    if (p->rx_time != 0) {
+    if (p->rx_time != 0)
+    {
         out += DEBUG_PORT.mt_sprintf(" rxtime=%u", p->rx_time);
     }
-    if (p->rx_snr != 0.0) {
+    if (p->rx_snr != 0.0)
+    {
         out += DEBUG_PORT.mt_sprintf(" rxSNR=%g", p->rx_snr);
     }
-    if (p->rx_rssi != 0) {
+    if (p->rx_rssi != 0)
+    {
         out += DEBUG_PORT.mt_sprintf(" rxRSSI=%i", p->rx_rssi);
     }
     if (p->priority != 0)
@@ -379,9 +391,11 @@ void RadioInterface::applyModemConfig()
     // Set up default configuration
     // No Sync Words in LORA mode
     meshtastic_Config_LoRaConfig &loraConfig = config.lora;
-    if (loraConfig.use_preset) {
+    if (loraConfig.use_preset)
+    {
 
-        switch (loraConfig.modem_preset) {
+        switch (loraConfig.modem_preset)
+        {
         case meshtastic_Config_LoRaConfig_ModemPreset_SHORT_FAST:
             bw = (myRegion->wideLora) ? 812.5 : 250;
             cr = 5;
@@ -423,7 +437,9 @@ void RadioInterface::applyModemConfig()
             sf = 12;
             break;
         }
-    } else {
+    }
+    else
+    {
         sf = loraConfig.spread_factor;
         cr = loraConfig.coding_rate;
         bw = loraConfig.bandwidth;
@@ -470,7 +486,8 @@ void RadioInterface::applyModemConfig()
     float freq = myRegion->freqStart + (bw / 2000) + (channel_num * (bw / 1000));
 
     // override if we have a verbatim frequency
-    if (loraConfig.override_frequency) {
+    if (loraConfig.override_frequency)
+    {
         freq = loraConfig.override_frequency;
         channel_num = -1;
     }
@@ -503,7 +520,8 @@ void RadioInterface::limitPower()
     if (myRegion->powerLimit)
         maxPower = myRegion->powerLimit;
 
-    if ((power > maxPower) && !devicestate.owner.is_licensed) {
+    if ((power > maxPower) && !devicestate.owner.is_licensed)
+    {
         LOG_INFO("Lowering transmit power because of regulatory limits\n");
         power = maxPower;
     }
@@ -535,7 +553,8 @@ size_t RadioInterface::beginSending(meshtastic_MeshPacket *p)
     h->to = p->to;
     h->id = p->id;
     h->channel = p->channel;
-    if (p->hop_limit > HOP_MAX) {
+    if (p->hop_limit > HOP_MAX)
+    {
         LOG_WARN("hop limit %d is too high, setting to %d\n", p->hop_limit, HOP_RELIABLE);
         p->hop_limit = HOP_RELIABLE;
     }
