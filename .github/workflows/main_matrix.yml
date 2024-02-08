@@ -187,7 +187,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: meshtastic/device-simulator:${{ steps.version.outputs.version }}
+          tags: nimnull/device-simulator:${{ steps.version.outputs.version }}
 
       - name: Docker build and push
         if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'pull_request_target' && github.event_name != 'pull_request' }}
@@ -196,7 +196,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: meshtastic/device-simulator:latest
+          tags: nimnull/device-simulator:latest
 
   after-checks:
     runs-on: ubuntu-latest
