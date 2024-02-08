@@ -9,7 +9,7 @@
 #endif
 
 #ifdef EINK_UA
-#include "fonts/EInkDisplayFontsUA.h"
+#include "graphics/fonts/EInkDisplayFontsUA.h"
 #endif
 
 #if (defined(USE_EINK) || defined(ILI9341_DRIVER) || defined(ST7735_CS) || defined(ST7789_CS) || defined(HX8357_CS)) &&          \
