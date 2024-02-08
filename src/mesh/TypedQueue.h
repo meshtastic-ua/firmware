@@ -77,13 +77,9 @@ template <class T> class TypedQueue
     int maxElements;
 
   public:
-    explicit TypedQueue(int maxElements) {
-        this->maxElements = maxElements;
-    }
+    explicit TypedQueue(int maxElements) { this->maxElements = maxElements; }
 
-    int numFree() {
-        return this->maxElements - q.size();
-    } // return real size of elements allowed to be added to queue
+    int numFree() { return this->maxElements - q.size(); } // return real size of elements allowed to be added to queue
 
     bool isEmpty() { return q.empty(); }
 
