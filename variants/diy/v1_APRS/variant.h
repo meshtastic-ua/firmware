@@ -14,8 +14,8 @@
 #define ADC_CHANNEL ADC1_GPIO35_CHANNEL
 #define ADC_MULTIPLIER 1.85 // (R1 = 470k, R2 = 680k)
 #define EXT_PWR_DETECT 4    // Pin to detect connected external power source for LILYGO® TTGO T-Energy T18 and other DIY boards
-//#define EXT_NOTIFY_OUT 12   // Overridden default pin to use for Ext Notify Module (#975).
-#define LED_PIN 2           // add status LED (compatible with core-pcb and DIY targets)
+// #define EXT_NOTIFY_OUT 12   // Overridden default pin to use for Ext Notify Module (#975).
+#define LED_PIN 2 // add status LED (compatible with core-pcb and DIY targets)
 
 #define LORA_DIO0     // a No connect on the SX1262/SX1268 module
 #define LORA_RESET 27 // RST for SX1276, and for SX1262/SX1268
@@ -23,10 +23,10 @@
 #define LORA_DIO2 14  // BUSY for SX1262/SX1268
 #define LORA_DIO3     // Not connected on PCB, but internally on the TTGO SX1262/SX1268, if DIO3 is high the TXCO is enabled
 
-//#define RF95_SCK 18
-//#define RF95_MISO 19
-//#define RF95_MOSI 23
-//#define RF95_NSS 5
+// #define RF95_SCK 18
+// #define RF95_MISO 19
+// #define RF95_MOSI 23
+// #define RF95_NSS 5
 
 #define LORA_SCK 18
 #define LORA_MISO 19
@@ -36,15 +36,15 @@
 // supported modules list
 // #define USE_RF95 // RFM95/SX127x
 // #define USE_SX1262
-//#define USE_SX1268
+// #define USE_SX1268
 // #define USE_LLCC68
-//#define SX126X_E22
+// #define SX126X_E22
 
 // supported modules list
-//#define USE_RF95 // RFM95/SX127x
+// #define USE_RF95 // RFM95/SX127x
 #define USE_SX1262
 #define USE_SX1268
-//#define USE_LLCC68
+// #define USE_LLCC68
 
 // common pinouts for SX126X modules
 #define SX126X_CS 18 // NSS for SX126X
