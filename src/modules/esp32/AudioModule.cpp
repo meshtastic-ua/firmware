@@ -1,4 +1,3 @@
-
 #include "configuration.h"
 #if defined(ARCH_ESP32) && defined(USE_SX1280)
 #include "AudioModule.h"
@@ -17,7 +16,7 @@
 #endif
 
 #ifdef EINK_UA
-#include "fonts/EInkDisplayFontsUA.h"
+#include "graphics/fonts/EInkDisplayFontsUA.h"
 #endif
 
 /*
