@@ -26,20 +26,31 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - board: rak11200
-          - board: tlora-v2-1-1_6
-          - board: tbeam
-          - board: heltec-v2_1
-          - board: meshtastic-diy-v1
-          - board: rak4631
-          - board: t-echo
-          - board: station-g2
-          - board: m5stack-coreink
-          - board: tbeam-s3-core
-          - board: tlora-t3s3-v1
-          - board: t-watch-s3
-          - board: t-deck
+        arch: [esp32, esp32s3, esp32c3, nrf52840, rp2040, stm32, check]
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        uses: actions/checkout@v4
+        name: Checkout base
+      - id: jsonStep
+        run: |
+          TARGETS=$(./bin/generate_ci_matrix.py ${{matrix.arch}})
+          echo "$TARGETS"
+          echo "${{matrix.arch}}=$(jq -cn --argjson environments "$TARGETS" '{board: $environments}')" >> $GITHUB_OUTPUT
+    outputs:
+      esp32: ${{ steps.jsonStep.outputs.esp32 }}
+      esp32s3: ${{ steps.jsonStep.outputs.esp32s3 }}
+      esp32c3: ${{ steps.jsonStep.outputs.esp32c3 }}
+      nrf52840: ${{ steps.jsonStep.outputs.nrf52840 }}
+      rp2040: ${{ steps.jsonStep.outputs.rp2040 }}
+      stm32: ${{ steps.jsonStep.outputs.stm32 }}
+      check: ${{ steps.jsonStep.outputs.check }}
+
+  check:
+    needs: setup
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.setup.outputs.check) }}
 
     runs-on: ubuntu-latest
     steps:
@@ -54,27 +65,7 @@ jobs:
     needs: setup
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - board: tlora-v2
-          - board: tlora-v2-1-1_6
-          - board: tlora-v2-1-1_6-tcxo
-          - board: tlora-v2-1-1_8
-          - board: tbeam
-          - board: heltec-ht62-esp32c3-sx1262
-          - board: heltec-v1
-          - board: heltec-v2_0
-          - board: heltec-v2_1
-          - board: tbeam0_7
-          - board: meshtastic-diy-v1
-          - board: hydra
-          - board: meshtastic-dr-dev
-          - board: nano-g1
-          - board: station-g1
-          - board: m5stack-core
-          - board: m5stack-coreink
-          - board: nano-g1-explorer
-          - board: chatter2
+      matrix: ${{ fromJson(needs.setup.outputs.esp32) }}
     uses: ./.github/workflows/build_esp32.yml
     with:
       board: ${{ matrix.board }}
@@ -101,13 +92,7 @@ jobs:
     needs: setup
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - board: t-echo
-          - board: canaryone
-          - board: pca10059_diy_eink
-          - board: feather_diy
-          - board: nano-g2-ultra
+      matrix: ${{ fromJson(needs.setup.outputs.nrf52840) }}
     uses: ./.github/workflows/build_nrf52.yml
     with:
       board: ${{ matrix.board }}
@@ -135,57 +120,11 @@ jobs:
   package-raspbian:
     uses: ./.github/workflows/package_raspbian.yml
 
-  build-native:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build base
-        id: base
-        uses: ./.github/actions/setup-base
-      # We now run integration test before other build steps (to quickly see runtime failures)
-      - name: Build Native
-        run: bin/build-native.sh
+  package-raspbian-armv7l:
+    uses: ./.github/workflows/package_raspbian_armv7l.yml
 
-      - name: Get release version string
-        run: echo "version=$(./bin/buildinfo.py long)" >> $GITHUB_OUTPUT
-        id: version
-
-      - name: Store binaries as an artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: firmware-native-${{ steps.version.outputs.version }}.zip
-          path: |
-            release/device-*.sh
-            release/device-*.bat
-
-      - name: Docker login
-        if: ${{ github.event_name != 'pull_request_target' && github.event_name != 'pull_request' }}
-        uses: docker/login-action@v2
-        with:
-          username: meshtastic
-          password: ${{ secrets.DOCKER_TOKEN }}
-
-      - name: Docker setup
-        if: ${{ github.event_name != 'pull_request_target' && github.event_name != 'pull_request' }}
-        uses: docker/setup-buildx-action@v2
-
-      - name: Docker build and push tagged versions
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: meshtastic/device-simulator:${{ steps.version.outputs.version }}
-
-      - name: Docker build and push
-        if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'pull_request_target' && github.event_name != 'pull_request' }}
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: meshtastic/device-simulator:latest
+  package-native:
+    uses: ./.github/workflows/package_amd64.yml
 
   after-checks:
     runs-on: ubuntu-latest
@@ -376,6 +315,36 @@ jobs:
           asset_path: ./debug-elfs-${{ steps.version.outputs.version }}.zip
           asset_name: debug-elfs-${{ steps.version.outputs.version }}.zip
           asset_content_type: application/zip
+
+      - name: Add raspbian aarch64 .deb
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./output/meshtasticd_${{ steps.version.outputs.version }}_arm64.deb
+          asset_name: meshtasticd_${{ steps.version.outputs.version }}_arm64.deb
+          asset_content_type: application/vnd.debian.binary-package
+
+      - name: Add raspbian armv7l .deb
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./output/meshtasticd_${{ steps.version.outputs.version }}_armhf.deb
+          asset_name: meshtasticd_${{ steps.version.outputs.version }}_armhf.deb
+          asset_content_type: application/vnd.debian.binary-package
+
+      - name: Add raspbian amd64 .deb
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./output/meshtasticd_${{ steps.version.outputs.version }}_amd64.deb
+          asset_name: meshtasticd_${{ steps.version.outputs.version }}_amd64.deb
+          asset_content_type: application/vnd.debian.binary-package
 
       - name: Bump version.properties
         run: >-
