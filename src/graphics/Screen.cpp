@@ -57,15 +57,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifdef OLED_RU
-#include "fonts/OLEDDisplayFontsRU.h"
+#include "graphics/fonts/OLEDDisplayFontsRU.h"
 #endif
 
 #ifdef OLED_UA
-#include "fonts/OLEDDisplayFontsUA.h"
+#include "graphics/fonts/OLEDDisplayFontsUA.h"
 #endif
 
 #ifdef EINK_UA
-#include "fonts/EInkDisplayFontsUA.h"
+#include "graphics/fonts/EInkDisplayFontsUA.h"
 #endif
 
 using namespace meshtastic; /** @todo remove */
