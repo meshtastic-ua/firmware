@@ -385,13 +385,3 @@ jobs:
           asset_path: ./meshtasticd_${{ steps.version.outputs.version }}_arm64.deb
           asset_name: meshtasticd_${{ steps.version.outputs.version }}_arm64.deb
           asset_content_type: application/vnd.debian.binary-package
-
-      - name: Bump version.properties
-        run: >-
-          bin/bump_version.py
-
-      - name: Create version.properties pull request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          add-paths: |
-            version.properties
