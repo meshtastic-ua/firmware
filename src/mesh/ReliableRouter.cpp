@@ -177,6 +177,20 @@ bool ReliableRouter::stopRetransmission(GlobalPacketId key)
         }
         auto numErased = pending.erase(key);
         assert(numErased == 1);
+        // remove the 'original' (identified by originator and packet->id) from the txqueue and free it
+        //cancelSending(getFrom(p), p->id);
+        // now free the pooled copy for retransmission too
+        //packetPool.release(p);
+
+        // code from https://github.com/meshtastic/firmware/commit/42b5a46565f87e407936752792c21ad8edfb0516
+        /* Only when we already transmitted a packet via LoRa, we will cancel the packet in the Tx queue
+          to avoid canceling a transmission if it was ACKed super fast via MQTT */
+        if (old->numRetransmissions < NUM_RETRANSMISSIONS - 1) {
+            // remove the 'original' (identified by originator and packet->id) from the txqueue and free it
+            cancelSending(getFrom(p), p->id);
+            // now free the pooled copy for retransmission too
+            packetPool.release(p);
+        }
         return true;
     } else
         return false;
