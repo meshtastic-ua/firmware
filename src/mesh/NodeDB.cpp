@@ -270,7 +270,7 @@ void NodeDB::installDefaultConfig()
         config.device.node_info_broadcast_secs = default_node_info_broadcast_secs;
     config.device.serial_enabled = true;
     resetRadioConfig();
-    strncpy(config.network.ntp_server, "0.pool.ntp.org", 32);
+    strncpy(config.network.ntp_server, "time.google.com", 32);
     // FIXME: Default to bluetooth capability of platform as default
     config.bluetooth.enabled = true;
     config.bluetooth.fixed_pin = defaultBLEPin;
@@ -363,7 +363,7 @@ void NodeDB::installDefaultModuleConfig()
     strncpy(moduleConfig.mqtt.username, default_mqtt_username, sizeof(moduleConfig.mqtt.username));
     strncpy(moduleConfig.mqtt.password, default_mqtt_password, sizeof(moduleConfig.mqtt.password));
     strncpy(moduleConfig.mqtt.root, default_mqtt_root, sizeof(moduleConfig.mqtt.root));
-    moduleConfig.mqtt.encryption_enabled = true;
+    moduleConfig.mqtt.encryption_enabled = false;
 
     moduleConfig.has_neighbor_info = true;
     moduleConfig.neighbor_info.enabled = false;
