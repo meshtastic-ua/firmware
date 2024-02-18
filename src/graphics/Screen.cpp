@@ -112,6 +112,7 @@ static uint16_t displayWidth, displayHeight;
 
 #define getStringCenteredX(s) ((SCREEN_WIDTH - display->getStringWidth(s)) / 2)
 
+
 /**
  * Draw the icon with extra info printed around the corners
  */

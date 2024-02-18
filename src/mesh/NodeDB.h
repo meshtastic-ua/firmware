@@ -222,7 +222,7 @@ extern NodeDB *nodeDB;
 #define default_mqtt_address "mqtt.wikimesh.pp.ua"
 #define default_mqtt_username "meshdev"
 #define default_mqtt_password "large4cats"
-#define default_mqtt_root "your_city"
+#define default_mqtt_root "city"
 
 inline uint32_t getConfiguredOrDefaultMs(uint32_t configuredInterval)
 {
