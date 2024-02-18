@@ -68,6 +68,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "graphics/fonts/EInkDisplayFontsUA.h"
 #endif
 
+#ifdef TD_UA
+#include "graphics/fonts/TDDisplayFontsUA.h"
+#endif
+
 using namespace meshtastic; /** @todo remove */
 
 namespace graphics
@@ -118,10 +122,13 @@ static uint16_t displayWidth, displayHeight;
 #if (defined(USE_EINK) || defined(ILI9341_DRIVER) || defined(ST7735_CS) || defined(ST7789_CS)) &&                                \
     !defined(DISPLAY_FORCE_SMALL_FONTS)
 // The screen is bigger so use bigger fonts
+#ifdef TD_UA
+#define FONT_SMALL ArialMT_Plain_24_UA
+#endif
 #ifdef EINK_UA
 #define FONT_SMALL ArialMT_Plain_16_UA // Height: 19
-#else
-#define FONT_SMALL ArialMT_Plain_16 // Height: 19
+//#else
+//#define FONT_SMALL ArialMT_Plain_16 // Height: 19
 #endif
 #define FONT_MEDIUM ArialMT_Plain_24 // Height: 28
 #define FONT_LARGE ArialMT_Plain_24  // Height: 28
@@ -146,6 +153,7 @@ static uint16_t displayWidth, displayHeight;
 #define FONT_HEIGHT_LARGE fontHeight(FONT_LARGE)
 
 #define getStringCenteredX(s) ((SCREEN_WIDTH - display->getStringWidth(s)) / 2)
+
 
 /**
  * Draw the icon with extra info printed around the corners

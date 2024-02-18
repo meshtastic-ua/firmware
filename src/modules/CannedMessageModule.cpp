@@ -30,14 +30,22 @@
 #include "graphics/fonts/EInkDisplayFontsUA.h"
 #endif
 
+#ifdef TD_UA
+#include "graphics/fonts/TDDisplayFontsUA.h"
+#endif
+
 #if (defined(USE_EINK) || defined(ILI9341_DRIVER) || defined(ST7735_CS) || defined(ST7789_CS)) &&                                \
     !defined(DISPLAY_FORCE_SMALL_FONTS)
 
 // The screen is bigger so use bigger fonts
+
+#ifdef TD_UA
+#define FONT_SMALL ArialMT_Plain_24_UA
+#endif
 #ifdef EINK_UA
 #define FONT_SMALL ArialMT_Plain_16_UA // Height: 19
-#else
-#define FONT_SMALL ArialMT_Plain_16 // Height: 19
+//#else
+//#define FONT_SMALL ArialMT_Plain_16 // Height: 19
 #endif
 #define FONT_MEDIUM ArialMT_Plain_24
 #define FONT_LARGE ArialMT_Plain_24
