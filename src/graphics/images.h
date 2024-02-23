@@ -31,4 +31,10 @@ const uint8_t imgQuestion[] PROGMEM = {0xbf, 0x41, 0xc0, 0x8b, 0xdb, 0x70, 0xa1,
 const uint8_t imgSF[] PROGMEM = {0xd2, 0xb7, 0xad, 0xbb, 0x92, 0x01, 0xfd, 0xfd, 0x15, 0x85, 0xf5};
 #endif
 
-#include "img/icon.xbm"
+#ifdef TD_UA
+    #include "img/tdeck.xbm"
+#elif defined(EINK_UA)
+    #include "img/techo.xbm"
+#else
+    #include "img/icon.xbm"
+#endif

@@ -418,7 +418,19 @@ static void drawTextMessageFrame(OLEDDisplay *display, OLEDDisplayUiState *state
     // with the third parameter you can define the width after which words will
     // be wrapped. Currently only spaces and "-" are allowed for wrapping
     display->setTextAlignment(TEXT_ALIGN_LEFT);
-    display->setFont(FONT_SMALL);
+    
+    //спроба змінити розмір тексту що виводится
+    //display->setFont(FONT_SMALL);
+
+    #ifdef TD_UA
+        display->setFont(FONT_LARGE);
+    #elif defined(EINK_UA)
+        display->setFont(FONT_LARGE);
+    #else
+        display->setFont(FONT_SMALL);
+    #endif
+
+
     if (config.display.displaymode == meshtastic_Config_DisplayConfig_DisplayMode_INVERTED) {
         display->fillRect(0 + x, 0 + y, x + display->getWidth(), y + FONT_HEIGHT_SMALL);
         display->setColor(BLACK);
@@ -777,7 +789,11 @@ static uint16_t getCompassDiam(OLEDDisplay *display)
         }
     }
 
-    return diam - 20;
+    #ifdef TD_UA
+        return (diam - 20) * 0.6;
+    #else
+        return diam - 20;
+    #endif
 };
 
 /// We will skip one node - the one for us, so we just blindly loop over all
@@ -890,7 +906,11 @@ static void drawNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, int16_
     // coordinates for the center of the compass/circle
     if (config.display.displaymode == meshtastic_Config_DisplayConfig_DisplayMode_DEFAULT) {
         compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 5;
-        compassY = y + SCREEN_HEIGHT / 2;
+        #ifdef EINK_UA
+         compassY = y + SCREEN_HEIGHT - getCompassDiam(display) / 2 - 5;
+        #else
+         compassY = y + SCREEN_HEIGHT / 2;
+        #endif  
     } else {
         compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 5;
         compassY = y + FONT_HEIGHT_SMALL + (SCREEN_HEIGHT - FONT_HEIGHT_SMALL) / 2;
