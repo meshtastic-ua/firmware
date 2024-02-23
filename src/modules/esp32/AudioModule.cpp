@@ -6,22 +6,9 @@
 #include "NodeDB.h"
 #include "RTC.h"
 #include "Router.h"
-
-#ifdef OLED_RU
-#include "graphics/fonts/OLEDDisplayFontsRU.h"
-#endif
-
-#ifdef OLED_UA
 #include "graphics/fonts/OLEDDisplayFontsUA.h"
-#endif
 
-#ifdef EINK_UA
-#include "graphics/fonts/EInkDisplayFontsUA.h"
-#endif
 
-#ifdef TD_UA
-#include "graphics/fonts/TDDisplayFontsUA.h"
-#endif
 
 /*
     AudioModule
@@ -55,33 +42,16 @@ AudioModule *audioModule;
 #define YIELD_FROM_ISR(x) portYIELD_FROM_ISR(x)
 #endif
 
-#if (defined(USE_EINK) || defined(ILI9341_DRIVER) || defined(ST7735_CS) || defined(ST7789_CS)) &&                                \
+#if (defined(USE_EINK) || defined(ILI9341_DRIVER) || defined(ST7735_CS) || defined(ST7789_CS) || defined(TD_UA) || defined(EINK_UA)) &&                                \
     !defined(DISPLAY_FORCE_SMALL_FONTS)
-
-// The screen is bigger so use bigger fonts
-#ifdef TD_UA
-#define FONT_SMALL ArialMT_Plain_24_UA
-#endif
-#ifdef EINK_UA
-#define FONT_SMALL ArialMT_Plain_16_UA // Height: 19
-//#else
-//#define FONT_SMALL ArialMT_Plain_16 // Height: 19
-#endif
-#define FONT_MEDIUM ArialMT_Plain_24
-#define FONT_LARGE ArialMT_Plain_24
-#else
-#ifdef OLED_RU
-#define FONT_SMALL ArialMT_Plain_10_RU
-#else
-#ifdef OLED_UA
-#define FONT_SMALL ArialMT_Plain_10_UA
-#else
-#define FONT_SMALL ArialMT_Plain_10
-#endif
-#endif
-#define FONT_MEDIUM ArialMT_Plain_16
-#define FONT_LARGE ArialMT_Plain_24
-#endif
+        #define FONT_SMALL ArialMT_Plain_16_UA
+        #define FONT_MEDIUM ArialMT_Plain_24_UA 
+        #define FONT_LARGE ArialMT_Plain_24_UA
+    #else
+        #define FONT_SMALL ArialMT_Plain_10_UA
+        #define FONT_MEDIUM ArialMT_Plain_16_UA 
+        #define FONT_LARGE ArialMT_Plain_24_UA
+    #endif
 
 #define fontHeight(font) ((font)[1] + 1) // height is position 1
 
