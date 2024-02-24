@@ -734,15 +734,15 @@ static uint16_t getCompassDiam(OLEDDisplay *display)
 
     // get the smaller of the 2 dimensions and subtract 20
     if (display->getWidth() > (display->getHeight() - offset)) {
-        diam = display->getHeight() - offset;
+        diam = display->getWidth() / 2;
         // if 2/3 of the other size would be smaller, use that
-        if (diam > (display->getWidth() * 2 / 3)) {
-            diam = display->getWidth() * 2 / 3;
+        if (diam > (display->getHeight() - offset)) {
+            diam = display->getHeight() - offset;
         }
     } else {
-        diam = display->getWidth();
-        if (diam > ((display->getHeight() - offset) * 2 / 3)) {
-            diam = (display->getHeight() - offset) * 2 / 3;
+        diam = (display->getHeight() - offset) / 2;
+        if (diam > display->getWidth()) {
+            diam =  display->getWidth();
         }
     }
 
