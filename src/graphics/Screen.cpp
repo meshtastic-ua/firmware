@@ -55,22 +55,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if ARCH_PORTDUINO
 #include "platform/portduino/PortduinoGlue.h"
 #endif
-
-#ifdef OLED_RU
-#include "graphics/fonts/OLEDDisplayFontsRU.h"
-#endif
-
-#ifdef OLED_UA
 #include "graphics/fonts/OLEDDisplayFontsUA.h"
-#endif
 
-#ifdef EINK_UA
-#include "graphics/fonts/EInkDisplayFontsUA.h"
-#endif
-
-#ifdef TD_UA
-#include "graphics/fonts/TDDisplayFontsUA.h"
-#endif
 
 using namespace meshtastic; /** @todo remove */
 
@@ -119,32 +105,16 @@ static uint16_t displayWidth, displayHeight;
 #define SCREEN_WIDTH displayWidth
 #define SCREEN_HEIGHT displayHeight
 
-#if (defined(USE_EINK) || defined(ILI9341_DRIVER) || defined(ST7735_CS) || defined(ST7789_CS)) &&                                \
+#if (defined(USE_EINK) || defined(ILI9341_DRIVER) || defined(ST7735_CS) || defined(ST7789_CS) || defined(T_DECK) || defined(EINK_UA)) &&                                \
     !defined(DISPLAY_FORCE_SMALL_FONTS)
-// The screen is bigger so use bigger fonts
-#ifdef TD_UA
-#define FONT_SMALL ArialMT_Plain_24_UA
-#endif
-#ifdef EINK_UA
-#define FONT_SMALL ArialMT_Plain_16_UA // Height: 19
-//#else
-//#define FONT_SMALL ArialMT_Plain_16 // Height: 19
-#endif
-#define FONT_MEDIUM ArialMT_Plain_24 // Height: 28
-#define FONT_LARGE ArialMT_Plain_24  // Height: 28
-#else
-#ifdef OLED_RU
-#define FONT_SMALL ArialMT_Plain_10_RU
-#else
-#ifdef OLED_UA
-#define FONT_SMALL ArialMT_Plain_10_UA
-#else
-#define FONT_SMALL ArialMT_Plain_10 // Height: 13
-#endif
-#endif
-#define FONT_MEDIUM ArialMT_Plain_16 // Height: 19
-#define FONT_LARGE ArialMT_Plain_24  // Height: 28
-#endif
+        #define FONT_SMALL ArialMT_Plain_16_UA
+        #define FONT_MEDIUM ArialMT_Plain_24_UA 
+        #define FONT_LARGE ArialMT_Plain_24_UA
+    #else
+        #define FONT_SMALL ArialMT_Plain_10_UA
+        #define FONT_MEDIUM ArialMT_Plain_16_UA 
+        #define FONT_LARGE ArialMT_Plain_24_UA
+    #endif
 
 #define fontHeight(font) ((font)[1] + 1) // height is position 1
 
@@ -405,7 +375,17 @@ static void drawTextMessageFrame(OLEDDisplay *display, OLEDDisplayUiState *state
     // with the third parameter you can define the width after which words will
     // be wrapped. Currently only spaces and "-" are allowed for wrapping
     display->setTextAlignment(TEXT_ALIGN_LEFT);
-    display->setFont(FONT_SMALL);
+    
+    //спроба змінити розмір тексту що виводится
+    //display->setFont(FONT_SMALL);
+    
+    #if (defined(T_DECK) || defined(EINK_UA))
+        display->setFont(FONT_LARGE);
+    #else
+        display->setFont(FONT_SMALL);
+    #endif
+
+
     if (config.display.displaymode == meshtastic_Config_DisplayConfig_DisplayMode_INVERTED) {
         display->fillRect(0 + x, 0 + y, x + display->getWidth(), y + FONT_HEIGHT_SMALL);
         display->setColor(BLACK);
@@ -744,27 +724,34 @@ static float estimatedHeading(double lat, double lon)
 
 static uint16_t getCompassDiam(OLEDDisplay *display)
 {
-    uint16_t diam = 0;
-    uint16_t offset = 0;
+    #ifdef T_DECK
+        return 130;
 
-    if (config.display.displaymode != meshtastic_Config_DisplayConfig_DisplayMode_DEFAULT)
-        offset = FONT_HEIGHT_SMALL;
+    #elif defined(EINK_UA)
+        return 105;    
+    #else
+        uint16_t diam = 0;
+        uint16_t offset = 0;
 
-    // get the smaller of the 2 dimensions and subtract 20
-    if (display->getWidth() > (display->getHeight() - offset)) {
-        diam = display->getHeight() - offset;
-        // if 2/3 of the other size would be smaller, use that
-        if (diam > (display->getWidth() * 2 / 3)) {
-            diam = display->getWidth() * 2 / 3;
+        if (config.display.displaymode != meshtastic_Config_DisplayConfig_DisplayMode_DEFAULT)
+            offset = FONT_HEIGHT_SMALL;
+
+        // get the smaller of the 2 dimensions and subtract 20
+        if (display->getWidth() > (display->getHeight() - offset)) {
+            diam = display->getHeight() - offset;
+            // if 2/3 of the other size would be smaller, use that
+            if (diam > (display->getWidth() * 2 / 3)) {
+                diam = display->getWidth() * 2 / 3;
+            }
+        } else {
+            diam = display->getWidth();
+            if (diam > ((display->getHeight() - offset) * 2 / 3)) {
+                diam = (display->getHeight() - offset) * 2 / 3;
+            }
         }
-    } else {
-        diam = display->getWidth();
-        if (diam > ((display->getHeight() - offset) * 2 / 3)) {
-            diam = (display->getHeight() - offset) * 2 / 3;
-        }
-    }
 
-    return diam - 20;
+        return diam - 20;
+    #endif
 };
 
 /// We will skip one node - the one for us, so we just blindly loop over all
@@ -877,7 +864,16 @@ static void drawNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, int16_
     // coordinates for the center of the compass/circle
     if (config.display.displaymode == meshtastic_Config_DisplayConfig_DisplayMode_DEFAULT) {
         compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 5;
-        compassY = y + SCREEN_HEIGHT / 2;
+        #ifdef EINK_UA
+            compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 10;
+            compassY = y + SCREEN_HEIGHT - getCompassDiam(display) / 2 - 15;
+        #elif defined(T_DECK)
+            compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 13;
+            compassY = y + SCREEN_HEIGHT / 2;
+        #else
+            compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 5;
+            compassY = y + SCREEN_HEIGHT / 2;
+        #endif  
     } else {
         compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 5;
         compassY = y + FONT_HEIGHT_SMALL + (SCREEN_HEIGHT - FONT_HEIGHT_SMALL) / 2;

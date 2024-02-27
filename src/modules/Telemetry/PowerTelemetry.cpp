@@ -10,6 +10,7 @@
 #include "power.h"
 #include "sleep.h"
 #include "target_specific.h"
+#include "graphics/fonts/OLEDDisplayFontsUA.h"
 
 #define FAILED_STATE_SENSOR_READ_MULTIPLIER 10
 #define DISPLAY_RECEIVEID_MEASUREMENTS_ON_SCREEN true
@@ -18,13 +19,13 @@
     !defined(DISPLAY_FORCE_SMALL_FONTS)
 
 // The screen is bigger so use bigger fonts
-#define FONT_SMALL ArialMT_Plain_16
-#define FONT_MEDIUM ArialMT_Plain_24
-#define FONT_LARGE ArialMT_Plain_24
+#define FONT_SMALL ArialMT_Plain_16_UA
+#define FONT_MEDIUM ArialMT_Plain_24_UA
+#define FONT_LARGE ArialMT_Plain_24_UA
 #else
-#define FONT_SMALL ArialMT_Plain_10
-#define FONT_MEDIUM ArialMT_Plain_16
-#define FONT_LARGE ArialMT_Plain_24
+#define FONT_SMALL ArialMT_Plain_10_UA
+#define FONT_MEDIUM ArialMT_Plain_16_UA
+#define FONT_LARGE ArialMT_Plain_24_UA
 #endif
 
 #define fontHeight(font) ((font)[1] + 1) // height is position 1
