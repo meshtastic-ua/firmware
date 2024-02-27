@@ -19,16 +19,16 @@
 #endif
 
 // The screen is bigger so use bigger fonts
-#if (defined(USE_EINK) || defined(ILI9341_DRIVER) || defined(ST7735_CS) || defined(ST7789_CS) || defined(TD_UA) || defined(EINK_UA)) &&                                \
+#if (defined(USE_EINK) || defined(ILI9341_DRIVER) || defined(ST7735_CS) || defined(ST7789_CS) || defined(T_DECK) || defined(EINK_UA)) &&                                \
     !defined(DISPLAY_FORCE_SMALL_FONTS)
         #define FONT_SMALL ArialMT_Plain_16_UA
         #define FONT_MEDIUM ArialMT_Plain_24_UA 
         #define FONT_LARGE ArialMT_Plain_24_UA
-#else
+    #else
         #define FONT_SMALL ArialMT_Plain_10_UA
         #define FONT_MEDIUM ArialMT_Plain_16_UA 
         #define FONT_LARGE ArialMT_Plain_24_UA
-#endif
+    #endif
 
 #define fontHeight(font) ((font)[1] + 1) // height is position 1
 

@@ -421,10 +421,8 @@ static void drawTextMessageFrame(OLEDDisplay *display, OLEDDisplayUiState *state
     
     //спроба змінити розмір тексту що виводится
     //display->setFont(FONT_SMALL);
-
-    #ifdef TD_UA
-        display->setFont(FONT_LARGE);
-    #elif defined(EINK_UA)
+    
+    #if (defined(T_DECK) || defined(EINK_UA))
         display->setFont(FONT_LARGE);
     #else
         display->setFont(FONT_SMALL);
@@ -769,29 +767,32 @@ static float estimatedHeading(double lat, double lon)
 
 static uint16_t getCompassDiam(OLEDDisplay *display)
 {
-    uint16_t diam = 0;
-    uint16_t offset = 0;
+    #ifdef T_DECK
+        return 130;
 
-    if (config.display.displaymode != meshtastic_Config_DisplayConfig_DisplayMode_DEFAULT)
-        offset = FONT_HEIGHT_SMALL;
-
-    // get the smaller of the 2 dimensions and subtract 20
-    if (display->getWidth() > (display->getHeight() - offset)) {
-        diam = display->getWidth() / 2;
-        // if 2/3 of the other size would be smaller, use that
-        if (diam > (display->getHeight() - offset)) {
-            diam = display->getHeight() - offset;
-        }
-    } else {
-        diam = (display->getHeight() - offset) / 2;
-        if (diam > display->getWidth()) {
-            diam =  display->getWidth();
-        }
-    }
-
-    #ifdef TD_UA
-        return (diam - 20) * 0.6;
+    #elif defined(EINK_UA)
+        return 90;    
     #else
+        uint16_t diam = 0;
+        uint16_t offset = 0;
+
+        if (config.display.displaymode != meshtastic_Config_DisplayConfig_DisplayMode_DEFAULT)
+            offset = FONT_HEIGHT_SMALL;
+
+        // get the smaller of the 2 dimensions and subtract 20
+        if (display->getWidth() > (display->getHeight() - offset)) {
+            diam = display->getHeight() - offset;
+            // if 2/3 of the other size would be smaller, use that
+            if (diam > (display->getWidth() * 2 / 3)) {
+                diam = display->getWidth() * 2 / 3;
+            }
+        } else {
+            diam = display->getWidth();
+            if (diam > ((display->getHeight() - offset) * 2 / 3)) {
+                diam = (display->getHeight() - offset) * 2 / 3;
+            }
+        }
+
         return diam - 20;
     #endif
 };
@@ -907,9 +908,14 @@ static void drawNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, int16_
     if (config.display.displaymode == meshtastic_Config_DisplayConfig_DisplayMode_DEFAULT) {
         compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 5;
         #ifdef EINK_UA
-         compassY = y + SCREEN_HEIGHT - getCompassDiam(display) / 2 - 5;
+            compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 10;
+            compassY = y + SCREEN_HEIGHT - getCompassDiam(display) / 2 - 10;
+        #elif defined(T_DECK)
+            compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 13;
+            compassY = y + SCREEN_HEIGHT / 2;
         #else
-         compassY = y + SCREEN_HEIGHT / 2;
+            compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 5;
+            compassY = y + SCREEN_HEIGHT / 2;
         #endif  
     } else {
         compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 5;
