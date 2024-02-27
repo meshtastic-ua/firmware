@@ -728,7 +728,7 @@ static uint16_t getCompassDiam(OLEDDisplay *display)
         return 130;
 
     #elif defined(EINK_UA)
-        return 90;    
+        return 105;    
     #else
         uint16_t diam = 0;
         uint16_t offset = 0;
@@ -866,7 +866,7 @@ static void drawNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, int16_
         compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 5;
         #ifdef EINK_UA
             compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 10;
-            compassY = y + SCREEN_HEIGHT - getCompassDiam(display) / 2 - 10;
+            compassY = y + SCREEN_HEIGHT - getCompassDiam(display) / 2 - 15;
         #elif defined(T_DECK)
             compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 13;
             compassY = y + SCREEN_HEIGHT / 2;
