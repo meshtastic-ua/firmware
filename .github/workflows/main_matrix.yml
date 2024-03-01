@@ -129,6 +129,7 @@ jobs:
           - board: pca10059_diy_eink
           - board: feather_diy
           - board: nano-g2-ultra
+          - board: meshtastic-diy-NiceRF
     uses: ./.github/workflows/build_nrf52.yml
     with:
       board: ${{ matrix.board }}
