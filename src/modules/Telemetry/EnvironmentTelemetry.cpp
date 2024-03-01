@@ -6,13 +6,13 @@
 #include "RTC.h"
 #include "Router.h"
 #include "configuration.h"
+#include "graphics/fonts/OLEDDisplayFontsUA.h"
 #include "main.h"
 #include "power.h"
 #include "sleep.h"
 #include "target_specific.h"
 #include <OLEDDisplay.h>
 #include <OLEDDisplayUi.h>
-#include "graphics/fonts/OLEDDisplayFontsUA.h"
 
 // Sensors
 #include "Sensor/BME280Sensor.h"

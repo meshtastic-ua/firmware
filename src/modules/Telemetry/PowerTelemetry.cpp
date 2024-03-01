@@ -6,11 +6,11 @@
 #include "RTC.h"
 #include "Router.h"
 #include "configuration.h"
+#include "graphics/fonts/OLEDDisplayFontsUA.h"
 #include "main.h"
 #include "power.h"
 #include "sleep.h"
 #include "target_specific.h"
-#include "graphics/fonts/OLEDDisplayFontsUA.h"
 
 #define FAILED_STATE_SENSOR_READ_MULTIPLIER 10
 #define DISPLAY_RECEIVEID_MEASUREMENTS_ON_SCREEN true

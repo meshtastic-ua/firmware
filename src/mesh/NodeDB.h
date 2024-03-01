@@ -243,11 +243,7 @@ extern meshtastic_CriticalErrorCode error_code;
  */
 extern uint32_t error_address;
 
-#define Module_Config_size (ModuleConfig_CannedMessageConfig_size + \
-                           ModuleConfig_ExternalNotificationConfig_size + \
-                           ModuleConfig_MQTTConfig_size + \
-                           ModuleConfig_RangeTestConfig_size + \
-                           ModuleConfig_SerialConfig_size + \
-                           ModuleConfig_StoreForwardConfig_size + \
-                           ModuleConfig_TelemetryConfig_size + \
-                           ModuleConfig_size)
+#define Module_Config_size                                                                                                       \
+    (ModuleConfig_CannedMessageConfig_size + ModuleConfig_ExternalNotificationConfig_size + ModuleConfig_MQTTConfig_size +       \
+     ModuleConfig_RangeTestConfig_size + ModuleConfig_SerialConfig_size + ModuleConfig_StoreForwardConfig_size +                 \
+     ModuleConfig_TelemetryConfig_size + ModuleConfig_size)
