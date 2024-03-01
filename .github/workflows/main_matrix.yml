@@ -66,12 +66,10 @@ jobs:
           - board: tlora-v2-1-1_6
           - board: tlora-v2-1-1_6-tcxo
           - board: tlora-v2-1-1_8
-          - board: meshtastic-diy-v1_APRS
           - board: tbeam
           - board: heltec-v2_0
           - board: heltec-v2_1
           - board: tbeam0_7
-          - board: meshtastic-diy-v1
           - board: hydra
           - board: meshtastic-dr-dev
           - board: nano-g1
@@ -80,6 +78,9 @@ jobs:
           - board: m5stack-coreink
           - board: nano-g1-explorer
           - board: chatter2
+          - board: meshtastic-diy-v1
+          - board: meshtastic-diy-NiceRF
+          - board: meshtastic-diy-v1_APRS
     uses: ./.github/workflows/build_esp32.yml
     with:
       board: ${{ matrix.board }}
@@ -129,7 +130,6 @@ jobs:
           - board: pca10059_diy_eink
           - board: feather_diy
           - board: nano-g2-ultra
-          - board: meshtastic-diy-NiceRF
     uses: ./.github/workflows/build_nrf52.yml
     with:
       board: ${{ matrix.board }}
