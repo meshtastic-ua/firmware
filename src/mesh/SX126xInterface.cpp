@@ -54,6 +54,10 @@ template <typename T> bool SX126xInterface<T>::init()
 
     RadioLibInterface::init();
 
+    if (power == 0)
+        power = SX126X_MAX_POWER;
+
+
     if (power > SX126X_MAX_POWER) // Clamp power to maximum defined level
         power = SX126X_MAX_POWER;
 
@@ -81,6 +85,9 @@ template <typename T> bool SX126xInterface<T>::init()
     LOG_DEBUG("Current limit set to %f\n", currentLimit);
     LOG_DEBUG("Current limit set result %d\n", res);
 
+// Fix NiceRF Power
+#ifndef NiceRF
+
 #ifdef SX126X_DIO2_AS_RF_SWITCH
     LOG_DEBUG("Setting DIO2 as RF switch\n");
     bool dio2AsRfSwitch = true;
@@ -94,6 +101,7 @@ template <typename T> bool SX126xInterface<T>::init()
     LOG_DEBUG("Setting DIO2 as not RF switch\n");
     bool dio2AsRfSwitch = false;
 #endif
+//fix power
     if (res == RADIOLIB_ERR_NONE) {
         res = lora.setDio2AsRfSwitch(dio2AsRfSwitch);
     }
@@ -116,8 +124,11 @@ template <typename T> bool SX126xInterface<T>::init()
 #endif
     if (res == RADIOLIB_ERR_NONE) {
         LOG_DEBUG("Using MCU pin %i as RXEN and pin %i as TXEN to control RF switching\n", SX126X_RXEN, SX126X_TXEN);
-        lora.setRfSwitchPins(SX126X_RXEN, SX126X_TXEN);
+       
+            lora.setRfSwitchPins(SX126X_RXEN, SX126X_TXEN);
+       
     }
+#endif
 #endif
     if (config.lora.sx126x_rx_boosted_gain) {
         uint16_t result = lora.setRxBoostedGainMode(true);
