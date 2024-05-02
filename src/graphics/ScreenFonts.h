@@ -1,5 +1,7 @@
 #pragma once
 
+#include "graphics/fonts/OLEDDisplayFontsUA.h"
+
 #ifdef OLED_RU
 #include "graphics/fonts/OLEDDisplayFontsRU.h"
 #endif
