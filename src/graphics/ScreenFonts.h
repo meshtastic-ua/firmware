@@ -12,6 +12,10 @@
 #include "graphics/fonts/EInkDisplayFontsUA.h"
 #endif
 
+#ifdef TD_UA
+#include "graphics/fonts/TDDisplayFontsUA.h"
+#endif
+
 #if (defined(USE_EINK) || defined(ILI9341_DRIVER) || defined(ST7735_CS) || defined(ST7789_CS) || defined(HX8357_CS)) &&          \
     !defined(DISPLAY_FORCE_SMALL_FONTS)
 // The screen is bigger so use bigger fonts
