@@ -54,7 +54,9 @@ template <typename T> bool SX126xInterface<T>::init()
 
     RadioLibInterface::init();
 
-    if (power > SX126X_MAX_POWER) // Clamp power to maximum defined level
+    if (power == 0)
+        power = SX126X_MAX_POWER;
+    elif (power > SX126X_MAX_POWER) // Clamp power to maximum defined level
         power = SX126X_MAX_POWER;
 
     limitPower();
@@ -81,23 +83,26 @@ template <typename T> bool SX126xInterface<T>::init()
     LOG_DEBUG("Current limit set to %f\n", currentLimit);
     LOG_DEBUG("Current limit set result %d\n", res);
 
-#ifdef SX126X_DIO2_AS_RF_SWITCH
-    LOG_DEBUG("Setting DIO2 as RF switch\n");
-    bool dio2AsRfSwitch = true;
-#elif defined(ARCH_PORTDUINO)
-    bool dio2AsRfSwitch = false;
-    if (settingsMap[dio2_as_rf_switch]) {
+// Fix NiceRF Power
+#ifndef NiceRF
+    #ifdef SX126X_DIO2_AS_RF_SWITCH
         LOG_DEBUG("Setting DIO2 as RF switch\n");
-        dio2AsRfSwitch = true;
-    }
-#else
-    LOG_DEBUG("Setting DIO2 as not RF switch\n");
-    bool dio2AsRfSwitch = false;
-#endif
+        bool dio2AsRfSwitch = true;
+    #elif defined(ARCH_PORTDUINO)
+        bool dio2AsRfSwitch = false;
+        if (settingsMap[dio2_as_rf_switch]) {
+            LOG_DEBUG("Setting DIO2 as RF switch\n");
+            dio2AsRfSwitch = true;
+        }
+    #else
+        LOG_DEBUG("Setting DIO2 as not RF switch\n");
+        bool dio2AsRfSwitch = false;
+    #endif
+
     if (res == RADIOLIB_ERR_NONE) {
         res = lora.setDio2AsRfSwitch(dio2AsRfSwitch);
     }
-
+#endif
     // If a pin isn't defined, we set it to RADIOLIB_NC, it is safe to always do external RF switching with RADIOLIB_NC as it has
     // no effect
 #if ARCH_PORTDUINO
@@ -126,7 +131,6 @@ template <typename T> bool SX126xInterface<T>::init()
         uint16_t result = lora.setRxBoostedGainMode(false);
         LOG_INFO("Set RX gain to power saving mode (boosted mode off); result: %d\n", result);
     }
-
 #if 0
     // Read/write a register we are not using (only used for FSK mode) to test SPI comms
     uint8_t crcLSB = 0;

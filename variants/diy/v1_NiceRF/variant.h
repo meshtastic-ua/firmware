@@ -49,6 +49,7 @@
 // Set lora.tx_power to 13 for Hydra or other E22 900M30S target due to PA
 #define SX126X_MAX_POWER 22
 
+#define NiceRF
 //#ifdef EBYTE_E22
 // Internally the TTGO module hooks the SX126x-DIO2 in to control the TX/RX switch
 // (which is the default for the sx1262interface code)
