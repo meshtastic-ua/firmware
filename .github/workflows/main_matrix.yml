@@ -81,6 +81,8 @@ jobs:
           - board: m5stack-coreink
           - board: nano-g1-explorer
           - board: chatter2
+          - board: meshtastic-diy-NiceRF
+          - board: meshtastic-diy-v1_APRS          
     uses: ./.github/workflows/build_esp32.yml
     with:
       board: ${{ matrix.board }}
