@@ -19,6 +19,12 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  # required for all workflows
+  security-events: write
+  contents: write
+  packages: write
+
 jobs:
   check:
     strategy:
