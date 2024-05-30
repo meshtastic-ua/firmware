@@ -123,11 +123,11 @@ static void drawIconScreen(const char *upperMsg, OLEDDisplay *display, OLEDDispl
 
     // draw centered icon left to right and centered above the one line of app text
     display->drawXbm(x + (SCREEN_WIDTH - icon_width) / 2, y + (SCREEN_HEIGHT - FONT_HEIGHT_MEDIUM - icon_height) / 2 + 2,
-                     icon_width, icon_height, icon_bits);
+                     icon_width, icon_height, (const uint8_t *)icon_bits);
 
     display->setFont(FONT_MEDIUM);
     display->setTextAlignment(TEXT_ALIGN_LEFT);
-    const char *title = "meshtastic.org";
+    const char *title = "wikimesh.pp.ua";
     display->drawString(x + getStringCenteredX(title), y + SCREEN_HEIGHT - FONT_HEIGHT_MEDIUM, title);
     display->setFont(FONT_SMALL);
 
@@ -756,6 +756,11 @@ static float estimatedHeading(double lat, double lon)
 
 static uint16_t getCompassDiam(OLEDDisplay *display)
 {
+#ifdef T_DECK
+    return 130;
+#elif defined(EINK_UA)
+    return 105;
+#else
     uint16_t diam = 0;
     uint16_t offset = 0;
 
@@ -777,6 +782,7 @@ static uint16_t getCompassDiam(OLEDDisplay *display)
     }
 
     return diam - 20;
+#endif
 };
 
 /// We will skip one node - the one for us, so we just blindly loop over all
@@ -888,8 +894,16 @@ static void drawNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, int16_
 
     // coordinates for the center of the compass/circle
     if (config.display.displaymode == meshtastic_Config_DisplayConfig_DisplayMode_DEFAULT) {
+#ifdef EINK_UA
+        compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 10;
+        compassY = y + SCREEN_HEIGHT - getCompassDiam(display) / 2 - 10;
+#elif defined(T_DECK)
+        compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 13;
+        compassY = y + SCREEN_HEIGHT / 2;
+#else
         compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 5;
         compassY = y + SCREEN_HEIGHT / 2;
+#endif
     } else {
         compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 5;
         compassY = y + FONT_HEIGHT_SMALL + (SCREEN_HEIGHT - FONT_HEIGHT_SMALL) / 2;
