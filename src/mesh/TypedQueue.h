@@ -74,7 +74,7 @@ template <class T> class TypedQueue
 {
     std::queue<T> q;
     concurrency::OSThread *reader = NULL;
-    int maxElements 10;
+    int maxElements;
 
   public:
     explicit TypedQueue(int maxElements) { this->maxElements = maxElements; }
