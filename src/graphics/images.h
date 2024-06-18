@@ -34,6 +34,8 @@ const uint8_t imgSF[] PROGMEM = {0xd2, 0xb7, 0xad, 0xbb, 0x92, 0x01, 0xfd, 0xfd,
 #include "img/tdeck.xbm"
 #elif defined(EINK_UA)
 #include "img/techo.xbm"
+#elif defined(UM_TFT)
+#include "img/UM_TFT.xbm"
 #else
 #include "img/icon.xbm"
 #endif
