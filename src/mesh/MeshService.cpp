@@ -87,7 +87,8 @@ int MeshService::handleFromRadio(const meshtastic_MeshPacket *mp)
                nodeInfoModule) {
         LOG_INFO("Heard a node on channel %d we don't know, sending NodeInfo and asking for a response.\n", mp->channel);
         if (airTime->isTxAllowedChannelUtil(true)) {
-            nodeInfoModule->sendOurNodeInfo(mp->from, true, mp->channel);
+            // we already updated NodeBD based on the captured packet. So there is no need to re-request reply from this node
+            nodeInfoModule->sendOurNodeInfo(mp->from, false, mp->channel);
         } else {
             LOG_DEBUG("Skip sending NodeInfo due to > 25 percent channel util.\n");
         }

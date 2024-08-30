@@ -269,12 +269,12 @@ void NodeDB::installDefaultConfig()
     config.has_network = true;
     config.has_bluetooth = (HAS_BLUETOOTH ? true : false);
     config.has_security = true;
-    config.device.rebroadcast_mode = meshtastic_Config_DeviceConfig_RebroadcastMode_ALL;
+    config.device.rebroadcast_mode = meshtastic_Config_DeviceConfig_RebroadcastMode_LOCAL_ONLY;
 
     config.lora.sx126x_rx_boosted_gain = true;
     config.lora.tx_enabled =
         true; // FIXME: maybe false in the future, and setting region to enable it. (unset region forces it off)
-    config.lora.override_duty_cycle = false;
+    config.lora.override_duty_cycle = true;
 #ifdef CONFIG_LORA_REGION_USERPREFS
     config.lora.region = CONFIG_LORA_REGION_USERPREFS;
 #else
@@ -317,7 +317,7 @@ void NodeDB::installDefaultConfig()
 #else
     config.position.gps_mode = meshtastic_Config_PositionConfig_GpsMode_ENABLED;
 #endif
-    config.position.position_broadcast_smart_enabled = true;
+    config.position.position_broadcast_smart_enabled = false;
     config.position.broadcast_smart_minimum_distance = 100;
     config.position.broadcast_smart_minimum_interval_secs = 30;
     if (config.device.role != meshtastic_Config_DeviceConfig_Role_ROUTER)
@@ -430,7 +430,7 @@ void NodeDB::installDefaultModuleConfig()
     strncpy(moduleConfig.mqtt.username, default_mqtt_username, sizeof(moduleConfig.mqtt.username));
     strncpy(moduleConfig.mqtt.password, default_mqtt_password, sizeof(moduleConfig.mqtt.password));
     strncpy(moduleConfig.mqtt.root, default_mqtt_root, sizeof(moduleConfig.mqtt.root));
-    moduleConfig.mqtt.encryption_enabled = true;
+    moduleConfig.mqtt.encryption_enabled = false;
 
     moduleConfig.has_neighbor_info = true;
     moduleConfig.neighbor_info.enabled = false;
