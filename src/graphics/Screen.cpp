@@ -162,7 +162,7 @@ static void drawIconScreen(const char *upperMsg, OLEDDisplay *display, OLEDDispl
 #ifdef SPLASH_TITLE_USERPREFS
     const char *title = SPLASH_TITLE_USERPREFS;
 #else
-    const char *title = "meshtastic.org";
+    const char *title = "wikimesh.pp.ua";
 #endif
     display->drawString(x + getStringCenteredX(title), y + SCREEN_HEIGHT - FONT_HEIGHT_MEDIUM, title);
     display->setFont(FONT_SMALL);
@@ -1356,6 +1356,11 @@ void Screen::drawCompassNorth(OLEDDisplay *display, int16_t compassX, int16_t co
 
 uint16_t Screen::getCompassDiam(uint32_t displayWidth, uint32_t displayHeight)
 {
+#ifdef T_DECK
+    return 130;
+#elif defined(EINK_UA)
+    return 105;
+#else
     uint16_t diam = 0;
     uint16_t offset = 0;
 
@@ -1377,6 +1382,7 @@ uint16_t Screen::getCompassDiam(uint32_t displayWidth, uint32_t displayHeight)
     }
 
     return diam - 20;
+#endif
 };
 
 static void drawNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y)
@@ -1433,8 +1439,16 @@ static void drawNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, int16_
 
     // coordinates for the center of the compass/circle
     if (config.display.displaymode == meshtastic_Config_DisplayConfig_DisplayMode_DEFAULT) {
+#ifdef EINK_UA
+        compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 10;
+        compassY = y + SCREEN_HEIGHT - getCompassDiam(display) / 2 - 10;
+#elif defined(T_DECK)
+        compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 13;
+        compassY = y + SCREEN_HEIGHT / 2;
+#else        
         compassX = x + SCREEN_WIDTH - compassDiam / 2 - 5;
         compassY = y + SCREEN_HEIGHT / 2;
+#endif
     } else {
         compassX = x + SCREEN_WIDTH - compassDiam / 2 - 5;
         compassY = y + FONT_HEIGHT_SMALL + (SCREEN_HEIGHT - FONT_HEIGHT_SMALL) / 2;

@@ -19,6 +19,8 @@ on:
 
   workflow_dispatch:
 
+permissions: write-all
+
 jobs:
   setup:
     strategy:

@@ -74,11 +74,12 @@ template <class T> class TypedQueue
 {
     std::queue<T> q;
     concurrency::OSThread *reader = NULL;
+    int maxElements;
 
   public:
-    explicit TypedQueue(int maxElements) {}
+    explicit TypedQueue(int maxElements) { this->maxElements = maxElements; }
 
-    int numFree() { return 1; } // Always claim 1 free, because we can grow to any size
+    int numFree() { return this->maxElements - q.size(); } // Always claim 1 free, because we can grow to any size
 
     bool isEmpty() { return q.empty(); }
 
@@ -90,9 +91,12 @@ template <class T> class TypedQueue
             reader->setInterval(0);
             concurrency::mainDelay.interrupt();
         }
-
-        q.push(x);
-        return true;
+        if (this->maxElements < q.size()) {
+            q.push(x);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // bool enqueueFromISR(T x, BaseType_t *higherPriWoken) { return xQueueSendToBackFromISR(h, &x, higherPriWoken) == pdTRUE; }
