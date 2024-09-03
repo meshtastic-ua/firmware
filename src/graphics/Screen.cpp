@@ -1440,10 +1440,10 @@ static void drawNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, int16_
     // coordinates for the center of the compass/circle
     if (config.display.displaymode == meshtastic_Config_DisplayConfig_DisplayMode_DEFAULT) {
 #ifdef EINK_UA
-        compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 10;
-        compassY = y + SCREEN_HEIGHT - getCompassDiam(display) / 2 - 10;
+        compassX = x + SCREEN_WIDTH - compassDiam / 2 - 10;
+        compassY = y + SCREEN_HEIGHT - compassDiam / 2 - 10;
 #elif defined(T_DECK)
-        compassX = x + SCREEN_WIDTH - getCompassDiam(display) / 2 - 13;
+        compassX = x + SCREEN_WIDTH - compassDiam / 2 - 13;
         compassY = y + SCREEN_HEIGHT / 2;
 #else        
         compassX = x + SCREEN_WIDTH - compassDiam / 2 - 5;
