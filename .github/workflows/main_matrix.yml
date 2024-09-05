@@ -115,9 +115,6 @@ jobs:
     with:
       board: ${{ matrix.board }}
 
-  package-raspbian:
-    uses: ./.github/workflows/package_raspbian.yml
-
   package-native:
     uses: ./.github/workflows/package_amd64.yml
 
