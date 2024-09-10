@@ -23,7 +23,7 @@
 #endif
 
 #define FONT_MEDIUM ArialMT_Plain_16_UA // Height: 19
-#define FONT_LARGE ArialMT_Plain_24  // Height: 28
+#define FONT_LARGE ArialMT_Plain_24_UA  // Height: 28
 
 #define _fontHeight(font) ((font)[1] + 1) // height is position 1
 

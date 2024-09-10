@@ -363,7 +363,7 @@ class Screen : public concurrency::OSThread
 
 #endif
 
-#if defined(OLED_UA) || defined(OLED_RU)
+#if defined(OLED_UA) || defined(OLED_RU) || (EINK_UA)
 
         switch (last) { // conversion depending on first UTF8-character
         case 0xC2: {
