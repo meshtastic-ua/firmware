@@ -1,4 +1,7 @@
 name: CI
+
+permissions: write-all
+
 concurrency:
   group: ci-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
