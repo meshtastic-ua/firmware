@@ -131,11 +131,11 @@ jobs:
     with:
       board: ${{ matrix.board }}
 
-  package-raspbian:
-    uses: ./.github/workflows/package_raspbian.yml
+  # package-raspbian:
+  #   uses: ./.github/workflows/package_raspbian.yml
 
-  package-raspbian-armv7l:
-    uses: ./.github/workflows/package_raspbian_armv7l.yml
+  # package-raspbian-armv7l:
+  #   uses: ./.github/workflows/package_raspbian_armv7l.yml
 
   package-native:
     uses: ./.github/workflows/package_amd64.yml
@@ -250,9 +250,9 @@ jobs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     needs: [
         gather-artifacts,
-        package-raspbian,
-        package-raspbian-armv7l,
-        package-native,
+        # package-raspbian,
+        # package-raspbian-armv7l,
+        # package-native,
       ]
     steps:
       - name: Checkout
@@ -280,46 +280,56 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: Download deb files
-        uses: actions/download-artifact@v4
-        with:
-          pattern: meshtasticd_${{ steps.version.outputs.version }}_*.deb
-          merge-multiple: true
-          path: ./output
+      # - name: Download deb files
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     pattern: meshtasticd_${{ steps.version.outputs.version }}_*.deb
+      #     merge-multiple: true
+      #     path: ./output
 
       # For diagnostics
       - name: Display structure of downloaded files
         run: ls -lR
 
-      - name: Add raspbian aarch64 .deb
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./output/meshtasticd_${{ steps.version.outputs.version }}_arm64.deb
-          asset_name: meshtasticd_${{ steps.version.outputs.version }}_arm64.deb
-          asset_content_type: application/vnd.debian.binary-package
+      # - name: Add raspbian aarch64 .deb
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ github.token }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ./output/meshtasticd_${{ steps.version.outputs.version }}_arm64.deb
+      #     asset_name: meshtasticd_${{ steps.version.outputs.version }}_arm64.deb
+      #     asset_content_type: application/vnd.debian.binary-package
 
-      - name: Add raspbian armv7l .deb
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./output/meshtasticd_${{ steps.version.outputs.version }}_armhf.deb
-          asset_name: meshtasticd_${{ steps.version.outputs.version }}_armhf.deb
-          asset_content_type: application/vnd.debian.binary-package
+      # - name: Add raspbian armv7l .deb
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ github.token }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ./output/meshtasticd_${{ steps.version.outputs.version }}_armhf.deb
+      #     asset_name: meshtasticd_${{ steps.version.outputs.version }}_armhf.deb
+      #     asset_content_type: application/vnd.debian.binary-package
 
-      - name: Add raspbian amd64 .deb
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./output/meshtasticd_${{ steps.version.outputs.version }}_amd64.deb
-          asset_name: meshtasticd_${{ steps.version.outputs.version }}_amd64.deb
-          asset_content_type: application/vnd.debian.binary-package
+      # - name: Add raspbian amd64 .deb
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ github.token }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ./output/meshtasticd_${{ steps.version.outputs.version }}_amd64.deb
+      #     asset_name: meshtasticd_${{ steps.version.outputs.version }}_amd64.deb
+      #     asset_content_type: application/vnd.debian.binary-package
+
+      # - name: Add raspbian amd64 .deb
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ github.token }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ./output/meshtasticd_${{ steps.version.outputs.version }}_amd64.deb
+      #     asset_name: meshtasticd_${{ steps.version.outputs.version }}_amd64.deb
+      #     asset_content_type: application/vnd.debian.binary-package
 
       - name: Bump version.properties
         run: >-
