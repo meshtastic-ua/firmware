@@ -1,6 +1,7 @@
 FROM debian:bookworm-slim AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
 ENV TZ=Etc/UTC
 
 # http://bugs.python.org/issue19846
