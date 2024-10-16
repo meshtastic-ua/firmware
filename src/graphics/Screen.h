@@ -370,7 +370,7 @@ class Screen : public concurrency::OSThread
 
 #endif
 
-#if defined(OLED_UA) || defined(OLED_RU)
+#if defined(OLED_UA) || defined(OLED_RU) || (EINK_UA)
 
         switch (last) {
         case 0xC3: {
