@@ -77,7 +77,9 @@ template <typename T> bool SX126xInterface<T>::init()
 
     RadioLibInterface::init();
 
-    if (power > SX126X_MAX_POWER) // Clamp power to maximum defined level
+    if (power == 0)
+        power = SX126X_MAX_POWER;
+    else if (power > SX126X_MAX_POWER) // Clamp power to maximum defined level
         power = SX126X_MAX_POWER;
 
     limitPower();
@@ -105,6 +107,7 @@ template <typename T> bool SX126xInterface<T>::init()
     LOG_DEBUG("Current limit set result %d", res);
 
     if (res == RADIOLIB_ERR_NONE) {
+#ifndef NiceRF
 #ifdef SX126X_DIO2_AS_RF_SWITCH
         bool dio2AsRfSwitch = true;
 #elif defined(ARCH_PORTDUINO)
@@ -114,6 +117,7 @@ template <typename T> bool SX126xInterface<T>::init()
         }
 #else
         bool dio2AsRfSwitch = false;
+#endif
 #endif
         res = lora.setDio2AsRfSwitch(dio2AsRfSwitch);
         LOG_DEBUG("Set DIO2 as %sRF switch, result: %d", dio2AsRfSwitch ? "" : "not ", res);
