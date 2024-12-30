@@ -30,26 +30,26 @@
 
     #define FONT_LARGE ArialMT_Plain_24 // Height: 28
 #else
-
     #ifdef OLED_PL
         #define FONT_SMALL ArialMT_Plain_10_PL
+        #define FONT_MEDIUM ArialMT_Plain_16 // Height: 19
+        #define FONT_LARGE ArialMT_Plain_24 // Height: 28
     #elif defined(OLED_RU)
         #define FONT_SMALL ArialMT_Plain_10_RU
+        #define FONT_MEDIUM ArialMT_Plain_16 // Height: 19
+        #define FONT_LARGE ArialMT_Plain_24 // Height: 28
     #elif defined(OLED_UA)
-        #define FONT_SMALL ArialMT_Plain_10_UA
+        #define FONT_SMALL ArialMT_Plain_10_UA // Height: 13
+        #define FONT_MEDIUM ArialMT_Plain_16_UA // Height: 19
+        #define FONT_LARGE ArialMT_Plain_24_UA // Height: 28
     #else
         #define FONT_SMALL ArialMT_Plain_10 // Height: 13
+        #define FONT_MEDIUM ArialMT_Plain_16 // Height: 19
+        #define FONT_LARGE ArialMT_Plain_24 // Height: 28
     #endif
 
 #endif
 
-#ifdef OLED_UA
-    #define FONT_MEDIUM ArialMT_Plain_16_UA // Height: 19
-#else
-    #define FONT_MEDIUM ArialMT_Plain_16 // Height: 19
-#endif
-
-#define FONT_LARGE ArialMT_Plain_24 // Height: 28
 
 #define _fontHeight(font) ((font)[1] + 1) // height is position 1
 
