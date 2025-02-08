@@ -317,9 +317,9 @@ jobs:
           merge-multiple: true
           path: ./output/debian-src
 
-      - name: Zip source deb
-        working-directory: output
-        run: zip -j -9 -r ./meshtasticd-${{ steps.version.outputs.deb }}-src.zip ./debian-src
+      # - name: Zip source deb
+      #   working-directory: output
+      #   run: zip -j -9 -r ./meshtasticd-${{ steps.version.outputs.deb }}-src.zip ./debian-src
 
       # For diagnostics
       - name: Display structure of downloaded files
