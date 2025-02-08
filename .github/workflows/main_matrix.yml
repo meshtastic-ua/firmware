@@ -129,12 +129,12 @@ jobs:
     with:
       board: ${{ matrix.board }}
 
-  build-debian-src:
-    uses: ./.github/workflows/build_debian_src.yml
-    with:
-      series: UNRELEASED
-      build_location: local
-    secrets: inherit
+  # build-debian-src:
+  #   uses: ./.github/workflows/build_debian_src.yml
+  #   with:
+  #     series: UNRELEASED
+  #     build_location: local
+  #   secrets: inherit
 
   test-native:
     uses: ./.github/workflows/test_native.yml
@@ -280,7 +280,8 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' }}
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
-    needs: [gather-artifacts, build-debian-src]
+    # needs: [gather-artifacts, build-debian-src]
+    needs: [gather-artifacts]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
