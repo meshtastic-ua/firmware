@@ -214,4 +214,10 @@ static unsigned char poo[] PROGMEM = {
 };
 #endif
 
+#if defined(T_DECK)
+#include "img/tdeck.xbm"
+#elif defined(USE_EINK)
+#include "img/techo.xbm"
+#else
 #include "img/icon.xbm"
+#endif

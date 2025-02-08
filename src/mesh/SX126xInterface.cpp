@@ -69,7 +69,9 @@ template <typename T> bool SX126xInterface<T>::init()
 
     RadioLibInterface::init();
 
-    if (power > SX126X_MAX_POWER) // Clamp power to maximum defined level
+    if (power = 0) // Clamp power to maximum defined level
+        power = SX126X_MAX_POWER;
+    else if (power > SX126X_MAX_POWER)
         power = SX126X_MAX_POWER;
 
     limitPower();

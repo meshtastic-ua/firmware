@@ -9,6 +9,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
 
 # Install Dependencies
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
 ENV PIP_ROOT_USER_ACTION=ignore
 RUN apt-get update && apt-get install --no-install-recommends -y wget g++ zip git ca-certificates \
         libgpiod-dev libyaml-cpp-dev libbluetooth-dev libi2c-dev \
