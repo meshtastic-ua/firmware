@@ -331,12 +331,12 @@ jobs:
           merge-multiple: true
           path: ./output
 
-      - name: Download source deb
-        uses: actions/download-artifact@v4
-        with:
-          pattern: firmware-debian-${{ steps.version.outputs.deb }}~UNRELEASED-src
-          merge-multiple: true
-          path: ./output/debian-src
+      # - name: Download source deb
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     pattern: firmware-debian-${{ steps.version.outputs.deb }}~UNRELEASED-src
+      #     merge-multiple: true
+      #     path: ./output/debian-src
 
       # - name: Zip source deb
       #   working-directory: output
@@ -351,7 +351,6 @@ jobs:
           gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd_${{ steps.version.outputs.long }}_arm64.deb
           gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd_${{ steps.version.outputs.long }}_armhf.deb
           gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd_${{ steps.version.outputs.long }}_amd64.deb
-          gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd-${{ steps.version.outputs.deb }}-src.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
