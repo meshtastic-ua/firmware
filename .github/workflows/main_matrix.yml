@@ -335,9 +335,9 @@ jobs:
         run: >-
           bin/bump_version.py
 
-      - name: Update debian changelog
-        run: >-
-          debian/ci_changelog.sh
+      # - name: Update debian changelog
+      #   run: >-
+      #     debian/ci_changelog.sh
 
       - name: Create version.properties pull request
         uses: peter-evans/create-pull-request@v7
