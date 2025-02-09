@@ -1,4 +1,5 @@
 name: CI
+permissions: write-all
 concurrency:
   group: ci-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
@@ -131,18 +132,18 @@ jobs:
   package-raspbian:
     uses: ./.github/workflows/package_raspbian.yml
 
-  package-raspbian-armv7l:
-    uses: ./.github/workflows/package_raspbian_armv7l.yml
+  # package-raspbian-armv7l:
+  #   uses: ./.github/workflows/package_raspbian_armv7l.yml
 
   package-native:
     uses: ./.github/workflows/package_amd64.yml
 
-  build-debian-src:
-    uses: ./.github/workflows/build_debian_src.yml
-    with:
-      series: UNRELEASED
-      build_location: local
-    secrets: inherit
+  # build-debian-src:
+  #   uses: ./.github/workflows/build_debian_src.yml
+  #   with:
+  #     series: UNRELEASED
+  #     build_location: local
+  #   secrets: inherit
 
   test-native:
     uses: ./.github/workflows/test_native.yml
@@ -288,13 +289,12 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' }}
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
-    needs:
-      [
+    needs: [
         gather-artifacts,
         package-raspbian,
-        package-raspbian-armv7l,
+        # package-raspbian-armv7l,
         package-native,
-        build-debian-src,
+        # build-debian-src,
       ]
     steps:
       - name: Checkout
@@ -331,16 +331,16 @@ jobs:
           merge-multiple: true
           path: ./output
 
-      - name: Download source deb
-        uses: actions/download-artifact@v4
-        with:
-          pattern: firmware-debian-${{ steps.version.outputs.deb }}~UNRELEASED-src
-          merge-multiple: true
-          path: ./output/debian-src
+      # - name: Download source deb
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     pattern: firmware-debian-${{ steps.version.outputs.deb }}~UNRELEASED-src
+      #     merge-multiple: true
+      #     path: ./output/debian-src
 
-      - name: Zip source deb
-        working-directory: output
-        run: zip -j -9 -r ./meshtasticd-${{ steps.version.outputs.deb }}-src.zip ./debian-src
+      # - name: Zip source deb
+      #   working-directory: output
+      #   run: zip -j -9 -r ./meshtasticd-${{ steps.version.outputs.deb }}-src.zip ./debian-src
 
       # For diagnostics
       - name: Display structure of downloaded files
@@ -349,9 +349,7 @@ jobs:
       - name: Add deb files to release
         run: |
           gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd_${{ steps.version.outputs.long }}_arm64.deb
-          gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd_${{ steps.version.outputs.long }}_armhf.deb
           gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd_${{ steps.version.outputs.long }}_amd64.deb
-          gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd-${{ steps.version.outputs.deb }}-src.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -359,9 +357,9 @@ jobs:
         run: >-
           bin/bump_version.py
 
-      - name: Update debian changelog
-        run: >-
-          debian/ci_changelog.sh
+      # - name: Update debian changelog
+      #   run: >-
+      #     debian/ci_changelog.sh
 
       - name: Create version.properties pull request
         uses: peter-evans/create-pull-request@v7
