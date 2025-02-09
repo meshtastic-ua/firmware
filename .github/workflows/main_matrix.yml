@@ -325,11 +325,11 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -lR
 
-      - name: Add source deb to release
-        run: |
-          gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd-${{ steps.version.outputs.deb }}-src.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Add source deb to release
+      #   run: |
+      #     gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd-${{ steps.version.outputs.deb }}-src.zip
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Bump version.properties
         run: >-
